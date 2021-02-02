@@ -1,0 +1,15 @@
+{
+  "console.log.language.noCostumeLangDirectory": "未检测到自定义语言文件。您可以将自定义的 .json 语言文件置于“config\\antigenius\\lang”文件夹内。",
+  "console.log.language.exceptionHappenWhenLoadLangFile": "加载语言文件时出现异常。",
+  "console.log.language.langFileLoadComplete": "%d个语言文件加载成功。",
+  "console.log.language.suggestALanguageForSpecifyLangCodeNotFound": "因您设置的语言 %s 不存在！参考了您的设置和操作系统信息，为您切换为 %s。",
+  "console.log.language.askForTranslate": "如果您对现在的语言有所了解，欢迎来 Github 帮忙翻译语言文件！",
+  "console.log.language.setLanguageToYourSystem": "尝试将语言设置为系统语言。",
+  "console.log.config.loadFailedInDict": "配置文件加载失败，新建一个默认配置文件。",
+
+  "config.defaultValue": "默认值：",
+  "config.available": "可用值：",
+
+  "config.comment.datasource": "在当前版本中只能使用 mysql。",
+  "config.comment.mysql.hostname": "mysql"
+}

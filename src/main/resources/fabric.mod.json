@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "antigenius",
+  "version": "${version}",
+
+  "name": "AntiGenius",
+  "description": "A fabric version of Prism named AntiGenius. Prevent grief from genius by logging and rollback.\nNOTE: This is a server-side mod. Doesn't work if you installed on a client.\nFabric 版的 Prism，名曰 \"AntiGenius\"。通过记录和回滚来防止小天才引发杯具。\n注意：这是一个服务器端MOD。如过你装在了客户端上的话，那装了等于没装。",
+  "authors": [
+    "viveleroi",
+    "Narimm",
+    "add5tar",
+    "Silence"
+  ],
+  "contact": {
+    "homepage": "https://github.com/sileence114/AntiGenius/wiki",
+    "issues": "https://github.com/sileence114/AntiGenius/issues",
+    "sources": "https://github.com/sileence114/AntiGenius"
+  },
+
+  "license": "GPL-3.0",
+  "icon": "assets/antigenius/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "pub.silence.antigenius.AntiGenius"
+    ],
+    "server": [
+      "pub.silence.antigenius.AntiGenius"
+    ]
+  },
+  "mixins": [
+
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.15.x"
+  },
+  "suggests": {
+
+  }
+}

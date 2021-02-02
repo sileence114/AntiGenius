@@ -1,0 +1,52 @@
+# config.yml default template
+#
+#node:
+#  default: default_value
+#  available:
+#    - value1
+#    - value2
+#    - value3
+#  comment:
+#    - "This is comment line 1."
+#    - "This is comment line 2."
+#  check:
+#    type: str
+#    in_available: true
+
+#node:
+#  default: 1
+#  available:
+#    - value1
+#    - value2
+#    - value3
+#  comment:
+#    - "This is comment line 1."
+#    - "This is comment line 2."
+#  check:
+#    type: int
+#    max: 5
+#    equal_max: true
+#    min: 0
+#    equal_min: true
+
+datasource:
+  default: "mysql"
+  available:
+    - "mysql"
+  comment:
+    - "config.comment.datasource"
+  check:
+    type: str
+    range:
+
+mysql.hostname:
+  default: "127.0.0.1"
+  available:
+    - "127.0.0.1"
+    - "localhost"
+  comment:
+    - "config.comment.datasource"
+  check:
+    type: str
+    in_available: false
+
