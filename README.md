@@ -40,7 +40,7 @@ Bukkit 端棱镜之支持在高于 1.15 版本的 Spigot 端或者 Paper 端 运
 
 # AntiGenius
 
-###### English / [中文]( #AntiGenius——反小天才 )
+###### English / [中文]( #AntiGenius反小天才 )
 
 A fabric-supported fork of [Prism-Bukkit]( https://github.com/AddstarMC/Prism-Bukkit ) named AntiGenius. Prevent grief
 from genius by logging and rollback.
