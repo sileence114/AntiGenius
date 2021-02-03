@@ -1,4 +1,4 @@
-# AntiGenius——反小天才
+# AntiGenius反小天才
 
 ###### [English]( #AntiGenius ) / 中文
 

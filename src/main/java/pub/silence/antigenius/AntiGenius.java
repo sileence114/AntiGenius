@@ -22,6 +22,7 @@ import java.nio.file.Files;
 
 public class AntiGenius implements ModInitializer, DedicatedServerModInitializer {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static boolean debug = false;
     private static AntiGenius instance;
 
     private ModContainer container;
@@ -32,6 +33,7 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
             instance = this;
         }
     }
+
     public static AntiGenius getInstance(){
         return instance;
     }
@@ -54,7 +56,6 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
         info("Working direction: " + this.workingDir);
         Language.initialize();
 
-        Config.initialize();
         ServerLifecycleEvents.SERVER_STARTING.register(ServerLife.getInstance()::onServerStarting);
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerLife.getInstance()::onServerStopping);
 
@@ -62,37 +63,41 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
 
     @Override
     public void onInitializeServer() {
-        info("");
+        info("onInitializeServer");
     }
-
 
     public String getInternalVersion() {
         return this.container.getMetadata().getVersion().getFriendlyString();
     }
 
-    public Path getWorkingDir(){
+    public Path getWorkingDir() {
         return this.workingDir;
     }
 
+    /**
+     * If print debug info is needed, I recommend that you can add `-Dfabric.log.level=debug` to VM arguments.
+     * `debug: true` in config will pull debug-level to info-level.
+     *
+     * @param message messages
+     */
+    public static void debug(Object... message) {
+        if (debug) {
+            LOGGER.debug(message);
+        } else {
+            LOGGER.info("[Debug] ", message);
+        }
 
-
-    public static void debug(String message){
-        LOGGER.info("[Debug] " + message);
-//        LOGGER.debug(message);
     }
-    public static void info(String message){
+
+    public static void info(Object... message) {
         LOGGER.info(message);
     }
-    public static void warn(String message) {
+
+    public static void warn(Object... message) {
         LOGGER.warn(message);
     }
-    public static void warn(String message, Exception e){
-        LOGGER.warn(message, e);
-    }
-    public static void error(String message){
+
+    public static void error(Object... message) {
         LOGGER.error(message);
-    }
-    public static void error(String message, Exception e){
-        LOGGER.error(message, e);
     }
 }

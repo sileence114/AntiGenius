@@ -16,7 +16,8 @@ public class Config {
     private static CommentedConfigurationNode root;
 
     public static void initialize(){
-        if(!loadConfigFromFile()){
+        loadConfigFromFile();
+        if (root == null || root.empty()) {
             AntiGenius.info(Language.getMessage("console.log.config.loadFailedInDict"));
             root = createDefault();
         }
@@ -53,7 +54,7 @@ public class Config {
         }
     }
 
-    private static boolean loadConfigFromFile(){
+    private static void loadConfigFromFile() {
         try {
             CommentedConfigurationNode configRoot = YamlConfigurationLoader
                     .builder()
@@ -61,11 +62,9 @@ public class Config {
                     .build()
                     .load();
             checkConfig(configRoot);
+        } catch (IOException e) {
+            AntiGenius.error("Failed to read config.yml.", e);
         }
-        catch (IOException e) {
-            return false;
-        }
-        return !root.empty();
     }
 
     private static void checkConfig(CommentedConfigurationNode configRoot){
@@ -94,7 +93,6 @@ public class Config {
                     .comment(Language.getMessage("config.comment.datasource"))
                     .comment(Language.getMessage("config.defaultValue") + "mysql")
                     .comment(Language.getMessage("config.available") + "mysql");
-            int x = 1;
         } catch (SerializationException ignored) { }
         return defaultRoot;
     }

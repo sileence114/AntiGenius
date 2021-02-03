@@ -69,17 +69,28 @@ public class Language {
     public static void loadAllLang() {
         FileFilter langFileFiller = pathname -> Pattern.matches("[a-z]{2}_[a-z]{2}.json", pathname.getName());
         try {
-            // Directory: resources\assets\antigenius\lang
-            File resourcesLangDirectory = new File(
-                    Objects.requireNonNull(Language.class.getClassLoader()
-                            .getResource("assets\\antigenius\\lang\\")
-                    ).toURI()
-            );
-            // Directory: .\config\antigenius\lang
-            File costumeLangDirectory = new File(
-                    AntiGenius.getInstance().getWorkingDir().resolve("lang").toUri()
-            );
             ArrayList<File> langFiles = new ArrayList<>();
+
+            // Directory: resources\assets\antigenius\lang
+            /* This doesn't work when build project to Jar.
+            File resourcesLangDirectory = new File(Objects.requireNonNull(
+                    Language.class.getClassLoader().getResource("assets\\antigenius\\lang\\")
+            ).toURI());
+            if (resourcesLangDirectory.isDirectory()) {
+                langFiles.addAll(Arrays.asList(resourcesLangDirectory.listFiles(langFileFiller)));
+            } */
+            String[] buildInLanguages = new String[]{
+                    // build-in lang files should written here.
+                    "en_us", "zh_cn"
+            };
+            for (String lang : buildInLanguages) {
+                langFiles.add(new File(Objects.requireNonNull(
+                        Language.class.getClassLoader().getResource("assets\\antigenius\\lang\\" + lang + ".json")
+                ).toURI()));
+            }
+
+            // Directory: .\config\antigenius\lang
+            File costumeLangDirectory = new File(AntiGenius.getInstance().getWorkingDir().resolve("lang").toUri());
             if (costumeLangDirectory.exists() && costumeLangDirectory.isDirectory()) {
                 langFiles.addAll(Arrays.asList(costumeLangDirectory.listFiles(langFileFiller)));
             } else {
@@ -88,9 +99,7 @@ public class Language {
                         "Costume lang directory not found."
                 ));
             }
-            if (resourcesLangDirectory.isDirectory()) {
-                langFiles.addAll(Arrays.asList(resourcesLangDirectory.listFiles(langFileFiller)));
-            }
+
             for (File item : langFiles) {
                 if (item.getName().endsWith(".json")) {
                     LANG_MAP.put(
