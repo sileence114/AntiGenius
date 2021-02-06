@@ -2,9 +2,8 @@
   "schemaVersion": 1,
   "id": "antigenius",
   "version": "${version}",
-
   "name": "AntiGenius",
-  "description": "A fabric version of Prism named AntiGenius. Prevent grief from genius by logging and rollback.\nNOTE: This is a server-side mod. Doesn't work if you installed on a client.\nFabric 版的 Prism，名曰 \"AntiGenius\"。通过记录和回滚来防止小天才引发杯具。\n注意：这是一个服务器端MOD。如过你装在了客户端上的话，那装了等于没装。",
+  "description": "A fabric version of Prism named AntiGenius. Prevent grief from genius by logging and rollback.NOTE: This is a server-side mod. Doesn't work if you installed on a client.Fabric 版的 Prism，名叫 \"AntiGenius\"。通过记录和回滚来防止小天才引发杯具。注意：这是一个服务器端MOD。如过你装在了客户端上的话，那装了等于没装。",
   "authors": [
     "viveleroi",
     "Narimm",

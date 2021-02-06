@@ -22,7 +22,7 @@ import java.nio.file.Files;
 
 public class AntiGenius implements ModInitializer, DedicatedServerModInitializer {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static boolean debug = false;
+    private static boolean debug = true;
     private static AntiGenius instance;
 
     private ModContainer container;
@@ -55,7 +55,7 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
         }
         info("Working direction: " + this.workingDir);
         Language.initialize();
-
+        Config.initialize();
         ServerLifecycleEvents.SERVER_STARTING.register(ServerLife.getInstance()::onServerStarting);
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerLife.getInstance()::onServerStopping);
 
@@ -78,26 +78,42 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
      * If print debug info is needed, I recommend that you can add `-Dfabric.log.level=debug` to VM arguments.
      * `debug: true` in config will pull debug-level to info-level.
      *
-     * @param message messages
+     * @param msg Message
+     * @param obj Other objects.
      */
-    public static void debug(Object... message) {
+    public static void debug(String msg, Object... obj) {
         if (debug) {
-            LOGGER.debug(message);
+            LOGGER.info("[Debug] " + msg);
+            if (obj.length != 0) {
+                LOGGER.info(obj);
+            }
         } else {
-            LOGGER.info("[Debug] ", message);
+            LOGGER.debug(msg);
+            if (obj.length != 0) {
+                LOGGER.debug(obj);
+            }
         }
 
     }
 
-    public static void info(Object... message) {
-        LOGGER.info(message);
+    public static void info(String msg, Object... obj) {
+        LOGGER.info(msg);
+        if (obj.length != 0) {
+            LOGGER.info(obj);
+        }
     }
 
-    public static void warn(Object... message) {
-        LOGGER.warn(message);
+    public static void warn(String msg, Object... obj) {
+        LOGGER.warn(msg);
+        if (obj.length != 0) {
+            LOGGER.warn(obj);
+        }
     }
 
-    public static void error(Object... message) {
-        LOGGER.error(message);
+    public static void error(String msg, Object... obj) {
+        LOGGER.error(msg);
+        if (obj.length != 0) {
+            LOGGER.error(obj);
+        }
     }
 }

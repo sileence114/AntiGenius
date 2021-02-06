@@ -2,9 +2,9 @@
   "test.Message": "This is a testing message.",
   "console.log.language.noCostumeLangDirectory": "Costume lang directory not found. You can put customized .json language file in the \"config\\antigenius\\lang\" folder.",
   "console.log.language.exceptionHappenWhenLoadLangFile": "Error happened when loading lang files.",
-  "console.log.language.langFileLoadComplete": "%d lang file load complete.",
+  "console.log.language.langFileLoadComplete": "%d lang file load complete: %s.",
   "console.log.language.suggestALanguageForSpecifyLangCodeNotFound": "The '%s' language you configured didn't found! With reference to your settings and operating system information, switch to %s.",
-  "console.log.language.askForTranslate":"If you understand the current language, please come to Github to help translate language files!",
+  "console.log.language.askForTranslate": "If you understand the current language, please come to Github to help translate language files!",
   "console.log.language.setLanguageToYourSystem": "Try to set the language to the system language.",
   "console.log.config.loadFailedInDict": "Load config failed, creating a default."
 }

@@ -14,7 +14,8 @@ Fabric 版的 [Prism-Bukkit]( https://github.com/AddstarMC/Prism-Bukkit )（棱�
 
 > **开发绝赞进行中**
 
-1. [Bukkit 端棱镜动作列表]( https://github.com/AddstarMC/Prism-Bukkit )里的事件全部都能监听，并记录到数据库。
+1. [Bukkit 端棱镜动作列表]( https://prism-bukkit.readthedocs.io/en/latest/commands/parameters.html#actions-list )
+   里的事件全部都能监听，并记录到数据库。
 2. 能把数据从数据库里面查出来。
 3. 回滚/恢复操作，及其预览。
 4. 支持其他类型的 SQL 数据库（SQLite之类的）。
@@ -46,7 +47,7 @@ A fabric-supported fork of [Prism-Bukkit]( https://github.com/AddstarMC/Prism-Bu
 from genius by logging and rollback.
 > My English is bad, and the following is basically done with the help of Google Translate.
 >
-> If you have grammar or vocabulary questions, just pr.
+> If I mistake in English usage, just pr.
 
 ## Reason of Carrying Prism to Fabric
 
