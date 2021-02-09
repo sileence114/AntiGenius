@@ -4,17 +4,22 @@ import net.minecraft.server.MinecraftServer;
 import pub.silence.antigenius.AntiGenius;
 
 public class ServerLife {
+    
     private static ServerLife INSTANCE = new ServerLife();
-    private ServerLife(){
-
+    
+    private ServerLife() {
+    
     }
-    public static ServerLife getInstance(){
+    
+    public static ServerLife getInstance() {
         return INSTANCE;
     }
-    public void onServerStarting(MinecraftServer server){
+    
+    public void onServerStarting(MinecraftServer server) {
         AntiGenius.info("onServerStart");
     }
-    public void onServerStopping(MinecraftServer server){
+    
+    public void onServerStopping(MinecraftServer server) {
         AntiGenius.info("onStopServer");
     }
 }

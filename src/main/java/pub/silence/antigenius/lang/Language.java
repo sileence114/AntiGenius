@@ -10,37 +10,34 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class Language {
+    
     private static final HashMap<String, JsonObject> LANG_MAP = new HashMap<>();
     private static final HashSet<String> AVAILABLE_LANG = new HashSet<>();
-
+    
     private static final String SYSTEM_LANG = Locale.getDefault().getLanguage();
     private static final String SYSTEM_AREA = Locale.getDefault().getCountry().toLowerCase();
-
+    
     // Lang code of operate system.
     private static final String SYSTEM_LANG_CODE = SYSTEM_LANG + "_" + SYSTEM_AREA;
     // Lang code setting by config_template.yml
     private static String configLangCode;
-
+    
     private static boolean codeConfigEqualsSystem = false;
     private static boolean systemLangCodeAvailable = false;
-
+    
     public static void initialize() {
         loadAllLang();
-        AntiGenius.info(getMessageWithCallback(
-                "console.log.language.setLanguageToYourSystem",
-                "Try to set the language to the system language."
-        ));
+        AntiGenius.info(getMessageWithCallback("console.log.language.setLanguageToYourSystem",
+            "Try to set the language to the system language."));
         setLanguage(SYSTEM_LANG_CODE);
     }
-
+    
     /**
-     * If some lang doesn't in available lang set,
-     * this methode will suggest a lang code.
-     * It will return same language in other countries/area.
-     * Otherwise it can return other language in the country/area.
-     * Firstly try to match language_countries/area uses the value in config.
-     * Then try to use value from system.
-     * In the worst case(could neither match country nor language), use English(en_us).
+     * If some lang doesn't in available lang set, this methode will suggest a lang code. It will
+     * return same language in other countries/area. Otherwise it can return other language in the
+     * country/area. Firstly try to match language_countries/area uses the value in config. Then try
+     * to use value from system. In the worst case(could neither match country nor language), use
+     * English(en_us).
      *
      * @return Language code
      */
@@ -60,69 +57,63 @@ public class Language {
         }
         return "en_us";
     }
-
+    
     /**
-     * Load all lang file from resources directory "resources\assets\antigenius\lang"
-     * and costume lang directory ".\config\antigenius\lang".
+     * Load all lang file from resources directory "resources\assets\antigenius\lang" and costume
+     * lang directory ".\config\antigenius\lang".
      */
     public static void loadAllLang() {
-        FileFilter langFileFiller = pathname -> Pattern.matches("[a-z]{2}_[a-z]{2}.json", pathname.getName());
+        FileFilter langFileFiller = pathname -> Pattern.matches("[a-z]{2}_[a-z]{2}.json",
+            pathname.getName());
         JsonParser jsonParser = new JsonParser();
         // Load build-in language. resources:assets/antigenius/lang/
-        String[] buildInLanguages = new String[]{
-                // build-in lang files should written here.
-                "en_us", "zh_cn"
-        };
+        String[] buildInLanguages = new String[]{"en_us", "zh_cn"};
         for (String lang : buildInLanguages) {
-            LANG_MAP.put(
-                    lang,
-                    jsonParser.parse(new InputStreamReader(Objects.requireNonNull(
-                            Language.class.getClassLoader()
-                                    .getResourceAsStream(String.format("assets/antigenius/lang/%s.json", lang))
-                    ), StandardCharsets.UTF_8)).getAsJsonObject()
-            );
+            LANG_MAP.put(lang, jsonParser.parse(new InputStreamReader(Objects.requireNonNull(
+                Language.class.getClassLoader()
+                              .getResourceAsStream(
+                                  String.format("assets/antigenius/lang/%s.json", lang))),
+                StandardCharsets.UTF_8)).getAsJsonObject());
         }
-
+    
         // Load costume language. .\config\antigenius\lang
-        File costumeLangDirectory = AntiGenius.getInstance().getWorkingDir().resolve("lang").toFile();
+        File costumeLangDirectory = AntiGenius.getInstance()
+                                              .getWorkingDir()
+                                              .resolve("lang")
+                                              .toFile();
         if (costumeLangDirectory.exists() && costumeLangDirectory.isDirectory()) {
             try {
                 for (File lang : costumeLangDirectory.listFiles(langFileFiller)) {
                     if (lang.getName().endsWith(".json")) {
-                        LANG_MAP.put(
-                                lang.getName().replaceAll(".json", ""),
-                                jsonParser.parse(new InputStreamReader(
-                                        new FileInputStream(lang), StandardCharsets.UTF_8)
-                                ).getAsJsonObject()
-                        );
+                        LANG_MAP.put(lang.getName().replaceAll(".json", ""), jsonParser.parse(
+                            new InputStreamReader(new FileInputStream(lang),
+                                StandardCharsets.UTF_8)).getAsJsonObject());
                     }
                 }
-            } catch (IOException e) {
-                AntiGenius.warn(getMessageWithCallback(
-                        "console.log.language.exceptionHappenWhenLoadLangFile",
-                        "Error happened when loading lang files."
-                ), e);
             }
-        } else {
-            AntiGenius.info(getMessageWithCallback(
-                    "console.log.language.noCostumeLangDirectory",
-                    "Costume lang directory not found. You can put customized .json language file in the \"config\\antigenius\\lang\" folder."
-            ));
+            catch (IOException e) {
+                AntiGenius.warn(
+                    getMessageWithCallback("console.log.language.exceptionHappenWhenLoadLangFile",
+                        "Error happened when loading lang files."), e);
+            }
         }
-
+        else {
+            AntiGenius.info(getMessageWithCallback("console.log.language.noCostumeLangDirectory",
+                "Costume lang directory not found. You can put customized .json language file in the \"config\\antigenius\\lang\" folder."));
+        }
+    
         AVAILABLE_LANG.clear();
         AVAILABLE_LANG.addAll(LANG_MAP.keySet());
         systemLangCodeAvailable = AVAILABLE_LANG.contains(SYSTEM_LANG_CODE);
-
+    
         AntiGenius.info(String.format(getMessageWithCallback(
                 "console.log.language.langFileLoadComplete",
                 "%d lang file load complete: %s."
         ), LANG_MAP.size(), AVAILABLE_LANG.toString()));
     }
-
+    
     /**
-     * Set a language.
-     * Load suggest language if specify lang didn't exist.
+     * Set a language. Load suggest language if specify lang didn't exist.
      *
      * @param specifyLangCode Code of specify lang.
      */
@@ -132,21 +123,17 @@ public class Language {
             configLangCode = getSuggestLanguage();
             codeConfigEqualsSystem = configLangCode.equals(SYSTEM_LANG_CODE);
             AntiGenius.info(String.format(getMessageWithCallback(
-                    "console.log.language.suggestALanguageForSpecifyLangCodeNotFound",
-                    "The '%s' language you configured didn't found! With reference to your settings and operating system information, switch to %s."
-            ), specifyLangCode, configLangCode));
-            AntiGenius.info(getMessageWithCallback(
-                    "console.log.language.askForTranslate",
-                    "If you understand the current language, please come to Github to help translate language files!"
-            ));
+                "console.log.language.suggestALanguageForSpecifyLangCodeNotFound",
+                "The '%s' language you configured didn't found! With reference to your settings and operating system information, switch to %s."), specifyLangCode, configLangCode));
+            AntiGenius.info(getMessageWithCallback("console.log.language.askForTranslate",
+                "If you understand the current language, please come to Github to help translate language files!"));
         }
         codeConfigEqualsSystem = configLangCode.equals(SYSTEM_LANG_CODE);
     }
-
+    
     /**
-     * Trying to get message with getMessage(key).
-     * If failed, return callback message.
-     * Most of time just getMessage(key), because lang file is loaded.
+     * Trying to get message with getMessage(key). If failed, return callback message. Most of time
+     * just getMessage(key), because lang file is loaded.
      *
      * @param key      Message Key.
      * @param callback Callback Message.
@@ -155,14 +142,17 @@ public class Language {
     public static String getMessageWithCallback(String key, String callback) {
         String message = getMessage(key);
         if (message.equals(key)) {
-            AntiGenius.debug(String.format("Getting message failed from <%s>, using callback value <%s>.", key, callback));
+            AntiGenius.debug(
+                String.format("Getting message failed from <%s>, using callback value <%s>.", key,
+                    callback));
             return callback;
-        } else {
+        }
+        else {
             return message;
         }
     }
-
-
+    
+    
     /**
      * Trying to get message from config lang.
      *
@@ -172,11 +162,11 @@ public class Language {
     public static String getMessage(String key) {
         return getMessage(key, configLangCode);
     }
-
-
+    
+    
     /**
-     * Get message from specify lang code.
-     * If failed, will tried: config lang -> system lang -> en_us
+     * Get message from specify lang code. If failed, will tried: config lang -> system lang ->
+     * en_us
      *
      * @param key             Key of Message in lang file.
      * @param specifyLangCode Code of specify lang.
@@ -188,7 +178,8 @@ public class Language {
             if (AVAILABLE_LANG.contains(specifyLangCode)) {
                 try {
                     msg = LANG_MAP.get(specifyLangCode).get(key).getAsString();
-                } catch (NullPointerException e) {
+                }
+                catch (NullPointerException e) {
                     msg = null;
                 }
                 if (msg != null) {
@@ -198,7 +189,8 @@ public class Language {
             if (codeConfigEqualsSystem) {
                 try {
                     msg = LANG_MAP.get(configLangCode).get(key).getAsString();
-                } catch (NullPointerException e) {
+                }
+                catch (NullPointerException e) {
                     msg = null;
                 }
                 if (msg != null) {
@@ -208,7 +200,8 @@ public class Language {
             if (systemLangCodeAvailable) {
                 try {
                     msg = LANG_MAP.get(SYSTEM_LANG_CODE).get(key).getAsString();
-                } catch (NullPointerException e) {
+                }
+                catch (NullPointerException e) {
                     msg = null;
                 }
                 if (msg != null) {
@@ -217,7 +210,8 @@ public class Language {
             }
             try {
                 msg = LANG_MAP.get("en_us").get(key).getAsString();
-            } catch (NullPointerException e) {
+            }
+            catch (NullPointerException e) {
                 msg = null;
             }
             if (msg != null) {
