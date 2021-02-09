@@ -11,28 +11,29 @@ import java.util.HashMap;
 
 
 public class Config {
-    private static HashMap root;
+    private static ConfigValues root;
 
-    public static void initialize(){
-        loadConfigFromFile();
-        if (root == null || root.isEmpty()) {
-            AntiGenius.info(Language.getMessage("console.log.config.loadFailedInDict"));
-            root = createDefault();
-        }
+    public static void initialize() {
+        root = new ConfigValues();
+//        loadConfigFromFile();
+//        if (root == null || root.isEmpty()) {
+//            AntiGenius.info(Language.getMessage("console.log.config.loadFailedInDict"));
+//            root = createDefault();
+//        }
     }
 
-    private static void loadConfigFromFile() {
-        try {
-            root = new Yaml().load(
-                    new FileInputStream(AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile())
-            );
-        } catch (IOException e) {
-            AntiGenius.error("Failed to read config.yml.", e);
-        }
-    }
-
-    private static HashMap createDefault() {
-        return new HashMap();
-    }
+//    private static void loadConfigFromFile() {
+//        try {
+//            root = new Yaml().load(
+//                    new FileInputStream(AntiGenius.getInstance().getWorkingDir().resolve("config_template.yml").toFile())
+//            );
+//        } catch (IOException e) {
+//            AntiGenius.error("Failed to read config_template.yml.", e);
+//        }
+//    }
+//
+//    private static HashMap createDefault() {
+//        return new HashMap();
+//    }
 
 }

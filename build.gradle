@@ -24,9 +24,12 @@ dependencies {
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 
-    compile "com.google.code.gson:gson:2.8.6"
-    compile "org.yaml:snakeyaml:1.26"
+    modImplementation "com.google.code.gson:gson:2.8.6"
+    modImplementation "org.yaml:snakeyaml:1.26"
 
+    // Needn't include gson to building.
+    // include "com.google.code.gson:gson:2.8.6"
+    include "org.yaml:snakeyaml:1.26"
 }
 
 processResources {

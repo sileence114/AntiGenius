@@ -6,8 +6,18 @@
   "console.log.language.askForTranslate": "如果您对现在的语言有所了解，欢迎来 Github 帮忙翻译语言文件！",
   "console.log.language.setLanguageToYourSystem": "尝试将语言设置为系统语言。",
   "console.log.config.loadFailedInDict": "配置文件加载失败，新建一个默认配置文件。",
-  "config.defaultValue": "默认值：",
-  "config.available": "可用值：",
-  "config.comment.datasource": "在当前版本中只能使用 mysql。",
-  "config.comment.mysql.hostname": "mysql"
+  "config.default": "默认：",
+  "config.available": "可用：",
+  "config.advise": "示例：",
+  "config.dataType": "数据类型：",
+  "config.comment.data.datasource": "存储数据的方式",
+  "config.comment.data.prefix": "数据表前缀",
+  "config.comment.data.mysql.hostname": "连接数据库的主机名或IP地址",
+  "config.comment.data.mysql.port": "",
+  "config.comment.data.mysql.username": "",
+  "config.comment.data.mysql.password": "",
+  "config.comment.data.mysql.database": "",
+  "config.comment.data.advance.max-failures-before-wait": "",
+  "config.comment.data.advance.actions-per-insert-batch": "",
+  "config.comment.data.advance.force-write-queue-on-shutdown": ""
 }

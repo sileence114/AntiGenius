@@ -18,7 +18,7 @@ public class Language {
 
     // Lang code of operate system.
     private static final String SYSTEM_LANG_CODE = SYSTEM_LANG + "_" + SYSTEM_AREA;
-    // Lang code setting by config.yml
+    // Lang code setting by config_template.yml
     private static String configLangCode;
 
     private static boolean codeConfigEqualsSystem = false;
