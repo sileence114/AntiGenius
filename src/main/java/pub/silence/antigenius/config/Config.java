@@ -1,17 +1,22 @@
 package pub.silence.antigenius.config;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Objects;
 import org.yaml.snakeyaml.Yaml;
 import pub.silence.antigenius.AntiGenius;
 import pub.silence.antigenius.lang.Language;
-
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
 
 public class Config {
     
@@ -20,7 +25,7 @@ public class Config {
     
     public static void initialize() {
         initializeMaps();
-        initializeCostumeData();
+        loadCostumeData();
     }
     
     private static void initializeMaps() {
@@ -52,9 +57,7 @@ public class Config {
             if (nodeTemplate.get("type") != null) {
                 commentLines.add(Language.getMessage("config.dataType") + nodeTemplate.get("type").toString());
             }
-            if (nodeTemplate.get("advice") != null && !(
-                (ArrayList<String>) nodeTemplate.get("advice")
-            ).isEmpty()) {
+            if (nodeTemplate.get("advice") != null && !((ArrayList<String>) nodeTemplate.get("advice")).isEmpty()) {
                 commentLines.add(Language.getMessage(
                     ((boolean) nodeTemplate.get("force_advice")) ? "config.available" : "config.advise"
                 ) + nodeTemplate.get("advice").toString());
@@ -66,8 +69,39 @@ public class Config {
         }
     }
     
-    private static void initializeCostumeData() {
+    private static void loadCostumeData() {
+        File configFile = AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile();
+        if (!configFile.exists()) {
+            AntiGenius.info(Language.getMessage("console.log.config.loadFailed"));
+            saveConfigFile();
+            return;
+        }
+        try {
+            HashMap<String, Object> costume = new Yaml().load(new FileReader(configFile));
+            mergeData(costume, data);
+        }
+        catch (IOException | NullPointerException e) {
+            AntiGenius.error("Load config.yml failed. Backup it and create a new file.", e);
+            saveConfigFile();
+        }
+        
+    }
     
+    private static void mergeData(HashMap<String, Object> from, HashMap<String, Object> to) {
+        for (String node : from.keySet()) {
+            Object nodeValue = from.get(node);
+            if (nodeValue instanceof HashMap) {
+                mergeData(toHashMap(nodeValue), toHashMap(to.get(node)));
+            }
+            else {
+                // Code for config item check added here.
+                to.put(node, nodeValue);
+            }
+        }
+    }
+    
+    private static String toCommentString() {
+        return toCommentString(data, 0, "");
     }
     
     private static String toCommentString(HashMap<String, Object> node, int tab, String parentNode) {
@@ -114,11 +148,7 @@ public class Config {
         }
     }
     
-    public static String toCommentString() {
-        return toCommentString(data, 0, "");
-    }
-    
-    public static void saveConfigFile() {
+    private static void saveConfigFile() {
         File configFile = AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile();
         try {
             if (configFile.exists()) {
@@ -143,6 +173,7 @@ public class Config {
         }
         catch (IOException e) {
             AntiGenius.error("UnExpected IOException happened when writing config.yml", e);
+            System.exit(114);
         }
     }
 }

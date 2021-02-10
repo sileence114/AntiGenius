@@ -2,12 +2,20 @@ package pub.silence.antigenius.lang;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import pub.silence.antigenius.AntiGenius;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
+import pub.silence.antigenius.AntiGenius;
 
 public class Language {
     

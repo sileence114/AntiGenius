@@ -6,7 +6,7 @@
   "console.log.language.suggestALanguageForSpecifyLangCodeNotFound": "The '%s' language you configured didn't found! With reference to your settings and operating system information, switch to %s.",
   "console.log.language.askForTranslate": "If you understand the current language, please come to Github to help translate language files!",
   "console.log.language.setLanguageToYourSystem": "Try to set the language to the system language.",
-  "console.log.config.loadFailedInDict": "Load config failed, creating a default.",
+  "console.log.config.loadFailed": "Load config failed, creating a default.",
   "config.default": "default: ",
   "config.available": "options: ",
   "config.advise": "example: ",
