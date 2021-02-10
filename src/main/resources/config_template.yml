@@ -82,3 +82,10 @@ data.advance.force-write-queue-on-shutdown:
   type: boolean
   force_advice: false
   range:
+
+language:
+  default:
+  advice:
+  type: string
+  force_advice: true
+  range:

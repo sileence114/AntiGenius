@@ -20,9 +20,12 @@ public class ConfigValues {
     
     private void initializeMap() {
         HashMap<String, Object> template = new Yaml().load(new InputStreamReader(
-            Objects.requireNonNull(
-                this.getClass().getClassLoader().getResourceAsStream("config_template.yml")),
-            StandardCharsets.UTF_8));
+            Objects.requireNonNull(this.getClass()
+                                       .getClassLoader()
+                                       .getResourceAsStream("config_template.yml")
+            ),
+            StandardCharsets.UTF_8
+        ));
         data.clear();
         
         for (String nodePath : template.keySet()) { // aaa.bbb.ccc
@@ -36,25 +39,30 @@ public class ConfigValues {
                 }
             }
             nodeVal.put(nodePathSplit[nodePathSplit.length - 1], nodeTemplate.get("default"));
-            
+    
             String commentMsg = Language.getMessageWithCallback("config.comment." + nodePath, "");
             ArrayList<String> commentLines = new ArrayList<>();
             if (commentMsg.length() != 0) {
                 commentLines.addAll(Arrays.asList(commentMsg.split("\\n")));
             }
             if (nodeTemplate.get("type") != null) {
-                commentLines.add(
-                    Language.getMessage("config.dataType") + nodeTemplate.get("type").toString());
+                commentLines.add(Language.getMessage("config.dataType") +
+                                 nodeTemplate.get("type").toString());
             }
-            if (nodeTemplate.get("advice") != null && !((ArrayList<String>) nodeTemplate.get(
-                "advice")).isEmpty()) {
+            if (nodeTemplate.get("advice") != null && !(
+                (ArrayList<String>) nodeTemplate.get("advice")
+            ).isEmpty()) {
                 commentLines.add(Language.getMessage(
-                    ((boolean) nodeTemplate.get("force_advice")) ? "config.available"
-                        : "config.advise") + nodeTemplate.get("advice").toString());
+                    ((boolean) nodeTemplate.get("force_advice")) ?
+                    "config.available" :
+                    "config.advise"
+                ) + nodeTemplate.get("advice").toString());
             }
             if (nodeTemplate.get("default") != null) {
                 commentLines.add(
-                    Language.getMessage("config.default") + nodeTemplate.get("default").toString());
+                    Language.getMessage("config.default") +
+                    nodeTemplate.get("default").toString()
+                );
             }
             comment.put(nodePath, commentLines);
         }
@@ -82,8 +90,11 @@ public class ConfigValues {
                 result.append(String.join("", Collections.nCopies(tab, "  ")))
                       .append(nodeName)
                       .append(": \n")
-                      .append(
-                          toCommentString((HashMap<String, Object>) childNode, tab + 1, nodePath));
+                      .append(toCommentString(
+                          (HashMap<String, Object>) childNode,
+                          tab + 1,
+                          nodePath
+                      ));
             }
             else {
                 result.append(String.join("", Collections.nCopies(tab, "  ")))

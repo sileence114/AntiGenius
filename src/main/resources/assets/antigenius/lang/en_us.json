@@ -6,5 +6,19 @@
   "console.log.language.suggestALanguageForSpecifyLangCodeNotFound": "The '%s' language you configured didn't found! With reference to your settings and operating system information, switch to %s.",
   "console.log.language.askForTranslate": "If you understand the current language, please come to Github to help translate language files!",
   "console.log.language.setLanguageToYourSystem": "Try to set the language to the system language.",
-  "console.log.config.loadFailedInDict": "Load config failed, creating a default."
+  "console.log.config.loadFailedInDict": "Load config failed, creating a default.",
+  "config.default": "default: ",
+  "config.available": "options: ",
+  "config.advise": "example: ",
+  "config.dataType": "type: ",
+  "config.comment.data.datasource": "Data stored.",
+  "config.comment.data.prefix": "Table prefix.",
+  "config.comment.data.mysql.hostname": "Host name or IP address of MySQL server.",
+  "config.comment.data.mysql.port": "Port of MySQL server.",
+  "config.comment.data.mysql.username": "MySQL server's username.",
+  "config.comment.data.mysql.password": "MySQL server's password.",
+  "config.comment.data.mysql.database": "Database name in MySQL server.",
+  "config.comment.data.advance.max-failures-before-wait": "",
+  "config.comment.data.advance.actions-per-insert-batch": "",
+  "config.comment.data.advance.force-write-queue-on-shutdown": ""
 }
