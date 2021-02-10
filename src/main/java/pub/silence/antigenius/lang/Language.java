@@ -82,8 +82,7 @@ public class Language {
         }
     
         // Load costume language. .\config\antigenius\lang
-        File costumeLangDirectory =
-            AntiGenius.getInstance().getWorkingDir().resolve("lang").toFile();
+        File costumeLangDirectory = AntiGenius.getInstance().getWorkingDir().resolve("lang").toFile();
         if (costumeLangDirectory.exists() && costumeLangDirectory.isDirectory()) {
             try {
                 for (File lang : costumeLangDirectory.listFiles(langFileFiller)) {
@@ -240,5 +239,14 @@ public class Language {
             }
         }
         return key;
+    }
+    
+    
+    public static HashSet<String> getAvailableLang() {
+        return AVAILABLE_LANG;
+    }
+    
+    public static String getSystemLangCode() {
+        return SYSTEM_LANG_CODE;
     }
 }

@@ -20,5 +20,6 @@
   "config.comment.data.mysql.database": "Database name in MySQL server.",
   "config.comment.data.advance.max-failures-before-wait": "",
   "config.comment.data.advance.actions-per-insert-batch": "",
-  "config.comment.data.advance.force-write-queue-on-shutdown": ""
+  "config.comment.data.advance.force-write-queue-on-shutdown": "",
+  "config.comment.language": "Language that AntiGenius will use."
 }

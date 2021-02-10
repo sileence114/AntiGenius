@@ -1,5 +1,15 @@
 package pub.silence.antigenius.config;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import org.yaml.snakeyaml.Yaml;
 import pub.silence.antigenius.AntiGenius;
 import pub.silence.antigenius.lang.Language;
@@ -8,14 +18,14 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class ConfigValues {
+public class ConfigNodes {
     
     private final HashMap<String, Object> data = new HashMap<>();
     private final HashMap<String, ArrayList<String>> comment = new HashMap<>();
     
-    public ConfigValues() {
+    public ConfigNodes() {
         initializeMap();
-        AntiGenius.debug("\n" + toCommentString());
+        saveConfigFile();
     }
     
     private void initializeMap() {
@@ -26,6 +36,8 @@ public class ConfigValues {
             ),
             StandardCharsets.UTF_8
         ));
+        ((HashMap<String, Object>) template.get("language")).put("default", Language.getSystemLangCode());
+        ((HashMap<String, Object>) template.get("language")).put("advice", new ArrayList<>(Language.getAvailableLang()));
         data.clear();
         
         for (String nodePath : template.keySet()) { // aaa.bbb.ccc
@@ -39,38 +51,29 @@ public class ConfigValues {
                 }
             }
             nodeVal.put(nodePathSplit[nodePathSplit.length - 1], nodeTemplate.get("default"));
-    
+            
             String commentMsg = Language.getMessageWithCallback("config.comment." + nodePath, "");
             ArrayList<String> commentLines = new ArrayList<>();
             if (commentMsg.length() != 0) {
                 commentLines.addAll(Arrays.asList(commentMsg.split("\\n")));
             }
             if (nodeTemplate.get("type") != null) {
-                commentLines.add(Language.getMessage("config.dataType") +
-                                 nodeTemplate.get("type").toString());
+                commentLines.add(Language.getMessage("config.dataType") + nodeTemplate.get("type").toString());
             }
             if (nodeTemplate.get("advice") != null && !(
                 (ArrayList<String>) nodeTemplate.get("advice")
             ).isEmpty()) {
                 commentLines.add(Language.getMessage(
-                    ((boolean) nodeTemplate.get("force_advice")) ?
-                    "config.available" :
-                    "config.advise"
+                    ((boolean) nodeTemplate.get("force_advice")) ? "config.available" : "config.advise"
                 ) + nodeTemplate.get("advice").toString());
             }
             if (nodeTemplate.get("default") != null) {
-                commentLines.add(
-                    Language.getMessage("config.default") +
-                    nodeTemplate.get("default").toString()
-                );
+                commentLines.add(Language.getMessage("config.default") + nodeTemplate.get("default").toString());
             }
             comment.put(nodePath, commentLines);
         }
     }
     
-    public String toCommentString() {
-        return toCommentString(data, 0, "");
-    }
     
     private String toCommentString(HashMap<String, Object> node, int tab, String parentNode) {
         StringBuilder result = new StringBuilder();
@@ -105,5 +108,39 @@ public class ConfigValues {
             }
         }
         return result.toString();
+    }
+    
+    
+    public String toCommentString() {
+        return toCommentString(data, 0, "");
+    }
+    
+    public void saveConfigFile() {
+        File configFile = AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile();
+        try {
+            if (configFile.exists()) {
+                Files.copy(
+                    configFile.toPath(),
+                    AntiGenius.getInstance()
+                              .getWorkingDir()
+                              .resolve(
+                                  "config." +
+                                  new SimpleDateFormat("MMddHHmmss").format(new Date()) +
+                                  ".yml"
+                              )
+                              .toAbsolutePath()
+                );
+                AntiGenius.debug("Backup old config file.");
+            }
+            PrintWriter out = new PrintWriter(configFile);
+            String[] configLines = toCommentString().split("\n");
+            for (String line : configLines) {
+                out.println(line);
+            }
+            out.close();
+        }
+        catch (IOException e) {
+            AntiGenius.error("UnExpected IOException happened when writing config.yml", e);
+        }
     }
 }

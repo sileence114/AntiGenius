@@ -42,11 +42,9 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
     
     @Override
     public void onInitialize() {
-        this.container = FabricLoader.getInstance()
-                                     .getModContainer("antigenius")
-                                     .orElseThrow(() -> new IllegalStateException(
-                                         "AntiGenius Mod Missing."));
-        debug("AntiGenius mod version: " + this.getInternalVersion());
+        container = FabricLoader.getInstance()
+                                .getModContainer("antigenius")
+                                .orElseThrow(() -> new IllegalStateException("AntiGenius Mod Missing."));
         workingDir = FabricLoader.getInstance().getConfigDir().resolve("antigenius");
         if (!Files.exists(workingDir)) {
             try {
@@ -56,7 +54,6 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
                 throw new UncheckedIOException(e);
             }
         }
-        debug("Working direction: " + this.workingDir);
         Language.initialize();
         Config.initialize();
         ServerLifecycleEvents.SERVER_STARTING.register(ServerLife.getInstance()::onServerStarting);
@@ -66,10 +63,11 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
     @Override
     public void onInitializeServer() {
         info("onInitializeServer");
+        System.exit(114514);
     }
     
     public String getInternalVersion() {
-        return this.container.getMetadata().getVersion().getFriendlyString();
+        return container.getMetadata().getVersion().getFriendlyString();
     }
     
     public Path getWorkingDir() {
