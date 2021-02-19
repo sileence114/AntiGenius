@@ -8,7 +8,7 @@
 #   comment:
 #     - "This is comment line 1."
 #     - "This is comment line 2."
-#   type: string
+#   type: string # boolean, float, int, string
 #   force_advice: true # if type is a string
 #   range: "[0,+∞)" # if type is a number
 
@@ -36,7 +36,6 @@ data.mysql.hostname:
 data.mysql.port:
   default: 3306
   advice: [ ]
-
   type: int
   force_advice: false
   range: "(0, 65535)"

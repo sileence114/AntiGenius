@@ -58,7 +58,7 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
     
     @Override
     public void onInitializeServer() {
-        info("onInitializeServer");
+        error("On initialize server. Stopping for testing mod initialize.");
         System.exit(114514);
     }
     

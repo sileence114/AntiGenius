@@ -21,6 +21,7 @@ import pub.silence.antigenius.lang.Language;
 public class Config {
     
     private static final HashMap<String, Object> data = new HashMap<>();
+    private static final HashMap<String, HashMap<String, Object>> template = new HashMap<>();
     private static final HashMap<String, ArrayList<String>> comment = new HashMap<>();
     
     public static void initialize() {
@@ -29,13 +30,15 @@ public class Config {
     }
     
     private static void initializeMaps() {
-        HashMap<String, Object> template = new Yaml().load(new InputStreamReader(
+        template.clear();
+        data.clear();
+        template.putAll(new Yaml().load(new InputStreamReader(
             Objects.requireNonNull(Config.class.getClassLoader().getResourceAsStream("config_template.yml")),
             StandardCharsets.UTF_8
-        ));
+        )));
         toHashMap(template.get("language")).put("default", Language.getSystemLangCode());
         toHashMap(template.get("language")).put("advice", new ArrayList<>(Language.getAvailableLang()));
-        data.clear();
+        
         
         for (String nodePath : template.keySet()) { // aaa.bbb.ccc
             HashMap<String, Object> nodeTemplate = toHashMap(template.get(nodePath));
@@ -175,5 +178,32 @@ public class Config {
             AntiGenius.error("UnExpected IOException happened when writing config.yml", e);
             System.exit(114);
         }
+    }
+    
+    public static boolean getAsBoolean(String... nodePath){
+        return (Boolean) get(nodePath);
+    }
+    
+    public static float getAsFloat(String... nodePath){
+        return (Float) get(nodePath);
+    }
+    
+    public static int getAsInt(String... nodePath){
+        return (Integer) get(nodePath);
+    }
+    
+    public static String getAsString(String... nodePath){
+        return (String)get(nodePath);
+    }
+    
+    public static Object get(String... node){
+        HashMap<String, Object> nodeVal = data;
+        for (int index = 0; index < node.length - 1; index++) { // aaa
+            nodeVal.computeIfAbsent(node[index], k -> new HashMap<String, Object>());
+            if (nodeVal.get(node[index]) instanceof HashMap) {
+                nodeVal = toHashMap(nodeVal.get(node[index]));
+            }
+        }
+        return nodeVal.get(node[node.length - 1]);
     }
 }
