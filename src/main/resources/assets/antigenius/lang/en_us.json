@@ -1,5 +1,4 @@
 {
-  "test.Message": "This is a testing message.",
   "console.log.language.noCostumeLangDirectory": "Costume lang directory not found. You can put customized .json language file in the \"config\\antigenius\\lang\" folder.",
   "console.log.language.exceptionHappenWhenLoadLangFile": "Error happened when loading lang files.",
   "console.log.language.langFileLoadComplete": "%d lang file load complete: %s.",

@@ -6,19 +6,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pub.silence.antigenius.command.AntigeniusCommand;
 import pub.silence.antigenius.config.Config;
-import pub.silence.antigenius.handler.ServerLife;
 import pub.silence.antigenius.lang.Language;
 
 
 public class AntiGenius implements ModInitializer, DedicatedServerModInitializer {
     
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(AntiGenius.class);
     private static boolean debug = true;
     private static AntiGenius instance;
     
@@ -50,16 +50,17 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
                 throw new UncheckedIOException(e);
             }
         }
-        Language.initialize();
-        Config.initialize();
-        ServerLifecycleEvents.SERVER_STARTING.register(ServerLife.getInstance()::onServerStarting);
-        ServerLifecycleEvents.SERVER_STOPPING.register(ServerLife.getInstance()::onServerStopping);
+        
     }
     
     @Override
     public void onInitializeServer() {
-        error("On initialize server. Stopping for testing mod initialize.");
-        System.exit(114514);
+        Language.initialize();
+        Config.initialize();
+        CommandRegistrationCallback.EVENT.register(AntigeniusCommand::register);
+        
+//        error("On initialize server. Stopping for testing mod initialize.");
+//        System.exit(114514);
     }
     
     public String getInternalVersion() {
