@@ -1,4 +1,4 @@
-package pub.silence.antigenius.lang;
+package pub.silence.antigenius.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

@@ -1,9 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "",
+  "package": "pub.silence.antigenius.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinCommandManager",
+    "MixinServerPlayerEntity"
   ],
   "client": [
   ],

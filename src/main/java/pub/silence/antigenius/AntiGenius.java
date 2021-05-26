@@ -6,14 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pub.silence.antigenius.command.AntigeniusCommand;
 import pub.silence.antigenius.config.Config;
-import pub.silence.antigenius.lang.Language;
+import pub.silence.antigenius.config.Language;
 
 
 public class AntiGenius implements ModInitializer, DedicatedServerModInitializer {
@@ -56,9 +54,8 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
     @Override
     public void onInitializeServer() {
         Language.initialize();
+        Language.setLanguage("en_us");
         Config.initialize();
-        CommandRegistrationCallback.EVENT.register(AntigeniusCommand::register);
-        
 //        error("On initialize server. Stopping for testing mod initialize.");
 //        System.exit(114514);
     }

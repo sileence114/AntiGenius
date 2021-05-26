@@ -4,9 +4,12 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;
 import pub.silence.antigenius.AntiGenius;
 
-public class InspectCommand extends SubCommands {
+public class InspectCommand extends SubCommand {
+    
     private static final InspectCommand INSTANCE = new InspectCommand();
-    private InspectCommand(){}
+    private InspectCommand(){
+        super.shortName = "i";
+    }
     public static InspectCommand getInstance() {
         return INSTANCE;
     }
@@ -15,4 +18,5 @@ public class InspectCommand extends SubCommands {
         AntiGenius.info("InspectCommand Executes");
         return 0;
     }
+    
 }

@@ -4,9 +4,11 @@ import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.server.command.ServerCommandSource;
 import pub.silence.antigenius.AntiGenius;
 
-public class LookupCommand extends SubCommands {
+public class LookupCommand extends SubCommand {
     private static final LookupCommand INSTANCE = new LookupCommand();
-    private LookupCommand(){}
+    private LookupCommand(){
+        super.shortName = "l";
+    }
     public static LookupCommand getInstance() {
         return INSTANCE;
     }

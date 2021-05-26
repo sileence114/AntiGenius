@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import org.yaml.snakeyaml.Yaml;
 import pub.silence.antigenius.AntiGenius;
-import pub.silence.antigenius.lang.Language;
 
 public class Config {
     
