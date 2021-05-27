@@ -53,7 +53,7 @@ public class CommandCommand extends SubCommand {
         commandContext.getSource().sendFeedback(
             new LiteralText("AntiGenius //").setStyle(new Style().setColor(Formatting.AQUA)).append(
                     new LiteralText(
-                        " --- " + Language.getMessage("command.command.head") + " ---"
+                        " --- " + Language.get("command.command.head") + " ---"
                     ).setStyle(new Style().setColor(Formatting.GOLD))
                 ),
             false
@@ -68,7 +68,7 @@ public class CommandCommand extends SubCommand {
         source.sendFeedback(
             new LiteralText("AntiGenius //").setStyle(new Style().setColor(Formatting.AQUA)).append(
                 new LiteralText(
-                    " --- " + Language.getMessage("command.command.head") + " ---"
+                    " --- " + Language.get("command.command.head") + " ---"
                 ).setStyle(new Style().setColor(Formatting.GOLD))
             ),
             false
@@ -96,22 +96,22 @@ public class CommandCommand extends SubCommand {
             new LiteralText("").setStyle(new Style().setColor(Formatting.GRAY)).append(" - ").append(
                 subCommand.isEnabled() ?
                 new LiteralText(
-                    "[" + Language.getMessage("command.enabled") + "] "
+                    "[" + Language.get("command.enabled") + "] "
                 ).setStyle(
                     new Style().setColor(Formatting.GREEN).setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
-                        new LiteralText(Language.getMessage("command.enabled.hover"))
+                        new LiteralText(Language.get("command.enabled.hover"))
                     )).setClickEvent(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
                         "/antigenius command " + subCommandName + " false"
                     ))
                 ) :
                 new LiteralText(
-                    "[" + Language.getMessage("command.disabled") + "] "
+                    "[" + Language.get("command.disabled") + "] "
                 ).setStyle(
                     new Style().setColor(Formatting.RED).setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
-                        new LiteralText(Language.getMessage("command.disabled.hover"))
+                        new LiteralText(Language.get("command.disabled.hover"))
                     )).setClickEvent(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
                         "/antigenius command " + subCommandName + " true"
@@ -125,7 +125,7 @@ public class CommandCommand extends SubCommand {
                 ).setStyle(
                     new Style().setHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
-                        new LiteralText(Language.getMessage("command.command.permission.level"))
+                        new LiteralText(Language.get("command.command.permission.level"))
                     )).setClickEvent(new ClickEvent(
                         ClickEvent.Action.SUGGEST_COMMAND,
                         "/antigenius command " + subCommandName + " " + subCommand.getPermissionLevel()

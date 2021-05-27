@@ -10,17 +10,17 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Formatter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
 import pub.silence.antigenius.AntiGenius;
 
 public class Language {
     
     private static final HashMap<String, JsonObject> LANG_MAP = new HashMap<>();
-    private static final HashSet<String> AVAILABLE_LANG = new HashSet<>();
     
     private static final String SYSTEM_LANG = Locale.getDefault().getLanguage();
     private static final String SYSTEM_AREA = Locale.getDefault().getCountry().toLowerCase();
@@ -28,18 +28,23 @@ public class Language {
     // Lang code of operate system.
     private static final String SYSTEM_LANG_CODE = SYSTEM_LANG + "_" + SYSTEM_AREA;
     // Lang code setting by config_template.yml
-    private static String configLangCode;
+    private static String configLangCode = "";
     
-    private static boolean codeConfigEqualsSystem = false;
-    private static boolean systemLangCodeAvailable = false;
-    
-    public static void initialize() {
+    public static void initialize(String langCode) {
         loadAllLang();
-        AntiGenius.info(getMessageWithCallback(
+        AntiGenius.info(SYSTEM_LANG_CODE.equals(langCode) ? getWithCallback(
             "console.log.language.setLanguageToYourSystem",
-            "Try to set the language to the system language."
+            "Try to set the language to the system language: %s.",
+            langCode
+        ): getWithCallback(
+            "console.log.language.setLanguage",
+            "Try to set language: %s.",
+            langCode
         ));
-        setLanguage(SYSTEM_LANG_CODE);
+        setLanguage(langCode);
+    }
+    public static void initialize() {
+        initialize(SYSTEM_LANG_CODE);
     }
     
     /**
@@ -49,20 +54,19 @@ public class Language {
      */
     public static void setLanguage(String specifyLangCode) {
         configLangCode = specifyLangCode;
-        if (!AVAILABLE_LANG.contains(specifyLangCode)) {
+        if (!LANG_MAP.containsKey(specifyLangCode)) {
             configLangCode = getSuggestLanguage();
-            codeConfigEqualsSystem = configLangCode.equals(SYSTEM_LANG_CODE);
-            AntiGenius.info(String.format(getMessageWithCallback(
+            AntiGenius.info(getWithCallback(
                 "console.log.language.suggestALanguageForSpecifyLangCodeNotFound",
                 "The '%s' language you configured didn't found! With reference to your settings and operating system " +
-                "information, switch to %s."
-            ), specifyLangCode, configLangCode));
-            AntiGenius.info(getMessageWithCallback(
+                "information, switch to %s.",
+                specifyLangCode,
+                configLangCode));
+            AntiGenius.info(getWithCallback(
                 "console.log.language.askForTranslate",
                 "If you understand the current language, please come to Github to help translate language files!"
             ));
         }
-        codeConfigEqualsSystem = configLangCode.equals(SYSTEM_LANG_CODE);
     }
     
     /**
@@ -73,14 +77,14 @@ public class Language {
      * @param callback Callback Message.
      * @return Result of getMessage(key) or callback message.
      */
-    public static String getMessageWithCallback(String key, String callback) {
-        String message = getMessage(key);
-        if (message.equals(key)) {
+    public static String getWithCallback(String key, String callback, Object... args) {
+        String message = get(key, args);
+        if (key.equals(message)) {
             AntiGenius.debug(String.format(
                 "Getting message failed from <%s>, using callback value <%s>.",
                 key, callback
             ));
-            return callback;
+            return new Formatter().format(callback, args).toString();
         }
         else {
             return message;
@@ -94,8 +98,8 @@ public class Language {
      * @param key Key of Message in lang file.
      * @return Message, or key if failed.
      */
-    public static String getMessage(String key) {
-        return getMessage(key, configLangCode);
+    public static String get(String key, Object... args) {
+        return getFromLangCode(key, configLangCode, args);
     }
     
     
@@ -106,10 +110,10 @@ public class Language {
      * @param specifyLangCode Code of specify lang.
      * @return Message, or key if failed.
      */
-    public static String getMessage(String key, String specifyLangCode) {
+    public static String getFromLangCode(String key, String specifyLangCode, Object... args) {
         if (LANG_MAP.size() != 0) {
             String msg;
-            if (AVAILABLE_LANG.contains(specifyLangCode)) {
+            if (LANG_MAP.containsKey(specifyLangCode)) {
                 try {
                     msg = LANG_MAP.get(specifyLangCode).get(key).getAsString();
                 }
@@ -117,10 +121,10 @@ public class Language {
                     msg = null;
                 }
                 if (msg != null) {
-                    return msg;
+                    return new Formatter().format(msg, args).toString();
                 }
             }
-            if (codeConfigEqualsSystem) {
+            if (!configLangCode.equals(SYSTEM_LANG_CODE)) {
                 try {
                     msg = LANG_MAP.get(configLangCode).get(key).getAsString();
                 }
@@ -128,10 +132,10 @@ public class Language {
                     msg = null;
                 }
                 if (msg != null) {
-                    return msg;
+                    return new Formatter().format(msg, args).toString();
                 }
             }
-            if (systemLangCodeAvailable) {
+            if (LANG_MAP.containsKey(SYSTEM_LANG_CODE)) {
                 try {
                     msg = LANG_MAP.get(SYSTEM_LANG_CODE).get(key).getAsString();
                 }
@@ -139,9 +143,10 @@ public class Language {
                     msg = null;
                 }
                 if (msg != null) {
-                    return msg;
+                    return new Formatter().format(msg, args).toString();
                 }
             }
+            
             try {
                 msg = LANG_MAP.get("en_us").get(key).getAsString();
             }
@@ -149,15 +154,15 @@ public class Language {
                 msg = null;
             }
             if (msg != null) {
-                return msg;
+                return new Formatter().format(msg, args).toString();
             }
         }
         return key;
     }
     
     
-    public static HashSet<String> getAvailableLang() {
-        return AVAILABLE_LANG;
+    public static Set<String> getAvailableLang() {
+        return LANG_MAP.keySet();
     }
     
     public static String getSystemLangCode() {
@@ -180,7 +185,7 @@ public class Language {
         matchCode.add(SYSTEM_LANG);
         matchCode.add(SYSTEM_AREA);
         for (String code : matchCode) {
-            for (String lang : AVAILABLE_LANG) {
+            for (String lang : LANG_MAP.keySet()) {
                 if (Pattern.matches("(.*)" + code + "(.*)", lang)) {
                     return lang;
                 }
@@ -209,7 +214,6 @@ public class Language {
                 ), StandardCharsets.UTF_8)).getAsJsonObject()
             );
         }
-    
         // Load costume language. .\config\antigenius\lang
         File costumeLangDirectory = AntiGenius.getInstance().getWorkingDir().resolve("lang").toFile();
         if (costumeLangDirectory.exists() && costumeLangDirectory.isDirectory()) {
@@ -221,38 +225,31 @@ public class Language {
                             jsonParser.parse(new InputStreamReader(
                                 new FileInputStream(lang),
                                 StandardCharsets.UTF_8
-                            ))
-                                      .getAsJsonObject()
+                            )).getAsJsonObject()
                         );
                     }
                 }
             }
             catch (IOException e) {
-                AntiGenius.warn(getMessageWithCallback(
+                AntiGenius.warn(getWithCallback(
                     "console.log.language.exceptionHappenWhenLoadLangFile",
                     "Error happened when loading lang files."
                 ), e);
             }
         }
         else {
-            AntiGenius.info(getMessageWithCallback(
+            AntiGenius.info(getWithCallback(
                 "console.log.language.noCostumeLangDirectory",
                 "Costume lang directory not found. You can put customized .json language file in the " +
                 "\"config\\antigenius\\lang\" folder."
             ));
         }
     
-        AVAILABLE_LANG.clear();
-        AVAILABLE_LANG.addAll(LANG_MAP.keySet());
-        systemLangCodeAvailable = AVAILABLE_LANG.contains(SYSTEM_LANG_CODE);
-    
-        AntiGenius.info(String.format(
-            getMessageWithCallback(
-                "console.log.language.langFileLoadComplete",
-                "%d lang file load complete: %s."
-            ),
+        AntiGenius.info(getWithCallback(
+            "console.log.language.langFileLoadComplete",
+            "%d lang file load complete: %s.",
             LANG_MAP.size(),
-            AVAILABLE_LANG.toString()
+            LANG_MAP.keySet().toString()
         ));
     }
 }

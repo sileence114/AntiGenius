@@ -4,7 +4,8 @@
   "console.log.language.langFileLoadComplete": "%d个语言文件加载成功：%s。",
   "console.log.language.suggestALanguageForSpecifyLangCodeNotFound": "因您设置的语言 %s 不存在！参考了您的设置和操作系统信息，为您切换为 %s。",
   "console.log.language.askForTranslate": "如果您对现在的语言有所了解，欢迎来 Github 帮忙翻译语言文件！",
-  "console.log.language.setLanguageToYourSystem": "尝试将语言设置为系统语言。",
+  "console.log.language.setLanguageToYourSystem": "尝试将语言设置为系统语言：%s。",
+  "console.log.language.setLanguage": "尝试设置语言为：%s。",
   "console.log.config.loadFailed": "配置文件加载失败，新建一个默认配置文件。",
 
   "config.default": "默认：",

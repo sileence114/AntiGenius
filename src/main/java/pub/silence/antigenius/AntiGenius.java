@@ -53,8 +53,7 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
     
     @Override
     public void onInitializeServer() {
-        Language.initialize();
-        Language.setLanguage("en_us");
+        Language.initialize("en_us");
         Config.initialize();
 //        error("On initialize server. Stopping for testing mod initialize.");
 //        System.exit(114514);

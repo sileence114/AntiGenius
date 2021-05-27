@@ -23,7 +23,7 @@ public class HelpCommand extends SubCommand {
         commandContext.getSource().sendFeedback(
             new LiteralText("AntiGenius //").setStyle(new Style().setColor(Formatting.AQUA)).append(
                     new LiteralText(
-                        " --- " + Language.getMessage("command.help.head") +" ---"
+                        " --- " + Language.get("command.help.head") + " ---"
                     ).setStyle(new Style().setColor(Formatting.GOLD))
             ),
             false
@@ -44,7 +44,7 @@ public class HelpCommand extends SubCommand {
                     ).append(")")
                 );
                 feedBack.append(
-                    new LiteralText(" - " + Language.getMessage("command." + subCommandName + ".help"))
+                    new LiteralText(" - " + Language.get("command." + subCommandName + ".help"))
                 );
                 commandContext.getSource().sendFeedback(feedBack, false);
             }

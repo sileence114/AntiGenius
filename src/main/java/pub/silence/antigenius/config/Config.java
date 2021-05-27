@@ -51,21 +51,21 @@ public class Config {
             }
             nodeVal.put(nodePathSplit[nodePathSplit.length - 1], nodeTemplate.get("default"));
             
-            String commentMsg = Language.getMessageWithCallback("config.comment." + nodePath, "");
+            String commentMsg = Language.getWithCallback("config.comment." + nodePath, "");
             ArrayList<String> commentLines = new ArrayList<>();
             if (commentMsg.length() != 0) {
                 commentLines.addAll(Arrays.asList(commentMsg.split("\\n")));
             }
             if (nodeTemplate.get("type") != null) {
-                commentLines.add(Language.getMessage("config.dataType") + nodeTemplate.get("type").toString());
+                commentLines.add(Language.get("config.dataType") + nodeTemplate.get("type").toString());
             }
             if (nodeTemplate.get("advice") != null && !((ArrayList<String>) nodeTemplate.get("advice")).isEmpty()) {
-                commentLines.add(Language.getMessage(
+                commentLines.add(Language.get(
                     ((boolean) nodeTemplate.get("force_advice")) ? "config.available" : "config.advise"
                 ) + nodeTemplate.get("advice").toString());
             }
             if (nodeTemplate.get("default") != null) {
-                commentLines.add(Language.getMessage("config.default") + nodeTemplate.get("default").toString());
+                commentLines.add(Language.get("config.default") + nodeTemplate.get("default").toString());
             }
             comment.put(nodePath, commentLines);
         }
@@ -74,7 +74,7 @@ public class Config {
     private static void loadCostumeData() {
         File configFile = AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile();
         if (!configFile.exists()) {
-            AntiGenius.info(Language.getMessage("console.log.config.loadFailed"));
+            AntiGenius.info(Language.get("console.log.config.loadFailed"));
             saveConfigFile();
             return;
         }
