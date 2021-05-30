@@ -156,13 +156,10 @@ public class Config {
             if (configFile.exists()) {
                 Files.copy(
                     configFile.toPath(),
-                    AntiGenius.getInstance()
-                              .getWorkingDir()
-                              .resolve(String.format(
-                                  "config.%s.yml",
-                                  new SimpleDateFormat("MMddHHmmss").format(new Date())
-                              ))
-                              .toAbsolutePath()
+                    AntiGenius.getInstance().getWorkingDir().resolve(String.format(
+                        "config.%s.yml",
+                        new SimpleDateFormat("MMddHHmmss").format(new Date())
+                    )).toAbsolutePath()
                 );
                 AntiGenius.debug("Backup old config file.");
             }
@@ -188,7 +185,7 @@ public class Config {
     }
     
     public static int getAsInt(String... nodePath){
-        return (Integer) get(nodePath);
+        return (Integer)get(nodePath);
     }
     
     public static String getAsString(String... nodePath){

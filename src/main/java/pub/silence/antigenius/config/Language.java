@@ -32,6 +32,7 @@ public class Language {
     
     public static void initialize(String langCode) {
         loadAllLang();
+        setLanguage(langCode);
         AntiGenius.info(SYSTEM_LANG_CODE.equals(langCode) ? getWithCallback(
             "console.log.language.setLanguageToYourSystem",
             "Try to set the language to the system language: %s.",
@@ -41,7 +42,6 @@ public class Language {
             "Try to set language: %s.",
             langCode
         ));
-        setLanguage(langCode);
     }
     public static void initialize() {
         initialize(SYSTEM_LANG_CODE);
@@ -177,7 +177,7 @@ public class Language {
      *
      * @return Language code
      */
-    private static String getSuggestLanguage() {
+    public static String getSuggestLanguage() {
         ArrayList<String> matchCode = new ArrayList<>();
         if (!SYSTEM_LANG_CODE.equals(configLangCode)) {
             matchCode.addAll(Arrays.asList(configLangCode.split("_")));

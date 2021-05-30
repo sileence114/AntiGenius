@@ -36,9 +36,9 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
     
     @Override
     public void onInitialize() {
-        container = FabricLoader.getInstance()
-                                .getModContainer("antigenius")
-                                .orElseThrow(() -> new IllegalStateException("AntiGenius Mod Missing."));
+        container = FabricLoader.getInstance().getModContainer("antigenius").orElseThrow(
+            () -> new IllegalStateException("AntiGenius Mod Missing.")
+        );
         workingDir = FabricLoader.getInstance().getConfigDir().resolve("antigenius");
         if (!Files.exists(workingDir)) {
             try {
