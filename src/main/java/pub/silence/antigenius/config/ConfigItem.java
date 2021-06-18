@@ -1,4 +1,4 @@
-package pub.silence.antigenius.config.tree;
+package pub.silence.antigenius.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,9 +15,11 @@ public class ConfigItem<T> {
     // About Value
     private T value;
     private T defaultValue;
-    
-    public ConfigItem(T defaultValue){
+    // Sort Id
+    private int id;
+    public ConfigItem(T defaultValue, int sort){
         this.value = this.defaultValue = defaultValue;
+        this.id = sort;
     }
     
     // About Suggest
@@ -74,20 +76,21 @@ public class ConfigItem<T> {
     }
     
     // About Value
-    public ConfigItem<T> set(T newValue) {
+    public ConfigItem<T> set(Object newValue) {
+        T val = (T)newValue;
         if(this.forceSuggest){
-            if(this.suggestValues.contains(newValue)){
-                this.value = newValue;
+            if(this.suggestValues.contains(val)){
+                this.value = val;
             }
         }
         else if(this.forceRange){
-            double doubleValue = ((Number)newValue).doubleValue();
-            if(doubleValue >= this.intervalStart && doubleValue <= this.intervalEnd){
-                this.value = newValue;
+            double doubleValue = ((Number)val).doubleValue();
+            if(doubleValue >= this.intervalStart && doubleValue < this.intervalEnd){
+                this.value = val;
             }
         }
         else{
-            this.value = newValue;
+            this.value = val;
         }
         return this;
     }
@@ -100,5 +103,8 @@ public class ConfigItem<T> {
     }
     public Class<?> type(){
         return this.defaultValue.getClass();
+    }
+    public int getSortId(){
+        return this.id;
     }
 }

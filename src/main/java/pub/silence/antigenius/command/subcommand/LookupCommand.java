@@ -15,7 +15,7 @@ public class LookupCommand extends SubCommand {
     
     @Override
     public int executeCommand(CommandContext<ServerCommandSource> commandContext) {
-        AntiGenius.info("LookupCommand Executes");
+        AntiGenius.logger().info("LookupCommand Executes");
         return 0;
     }
 }

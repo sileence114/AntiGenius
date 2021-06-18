@@ -33,7 +33,7 @@ public class Language {
     public static void initialize(String langCode) {
         loadAllLang();
         setLanguage(langCode);
-        AntiGenius.info(SYSTEM_LANG_CODE.equals(langCode) ? getWithCallback(
+        AntiGenius.logger().info(SYSTEM_LANG_CODE.equals(langCode) ? getWithCallback(
             "console.log.language.setLanguageToYourSystem",
             "Try to set the language to the system language: %s.",
             langCode
@@ -56,13 +56,13 @@ public class Language {
         configLangCode = specifyLangCode;
         if (!LANG_MAP.containsKey(specifyLangCode)) {
             configLangCode = getSuggestLanguage();
-            AntiGenius.info(getWithCallback(
+            AntiGenius.logger().info(getWithCallback(
                 "console.log.language.suggestALanguageForSpecifyLangCodeNotFound",
                 "The '%s' language you configured didn't found! With reference to your settings and operating system " +
                 "information, switch to %s.",
                 specifyLangCode,
                 configLangCode));
-            AntiGenius.info(getWithCallback(
+            AntiGenius.logger().info(getWithCallback(
                 "console.log.language.askForTranslate",
                 "If you understand the current language, please come to Github to help translate language files!"
             ));
@@ -80,7 +80,7 @@ public class Language {
     public static String getWithCallback(String key, String callback, Object... args) {
         String message = get(key, args);
         if (key.equals(message)) {
-            AntiGenius.debug(String.format(
+            AntiGenius.logger().debug(String.format(
                 "Getting message failed from <%s>, using callback value <%s>.",
                 key, callback
             ));
@@ -231,21 +231,21 @@ public class Language {
                 }
             }
             catch (IOException e) {
-                AntiGenius.warn(getWithCallback(
+                AntiGenius.logger().warn(getWithCallback(
                     "console.log.language.exceptionHappenWhenLoadLangFile",
                     "Error happened when loading lang files."
                 ), e);
             }
         }
         else {
-            AntiGenius.info(getWithCallback(
+            AntiGenius.logger().info(getWithCallback(
                 "console.log.language.noCostumeLangDirectory",
                 "Costume lang directory not found. You can put customized .json language file in the " +
                 "\"config\\antigenius\\lang\" folder."
             ));
         }
     
-        AntiGenius.info(getWithCallback(
+        AntiGenius.logger().info(getWithCallback(
             "console.log.language.langFileLoadComplete",
             "%d lang file load complete: %s.",
             LANG_MAP.size(),

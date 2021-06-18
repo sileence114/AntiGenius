@@ -11,6 +11,7 @@
   "config.default": "默认：",
   "config.available": "可用：",
   "config.advise": "示例：",
+  "config.range": "范围：",
   "config.dataType": "数据类型：",
   "config.comment.data.datasource": "存储数据的方式",
   "config.comment.data.prefix": "数据表前缀",

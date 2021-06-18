@@ -11,6 +11,7 @@
   "config.default": "default: ",
   "config.available": "options: ",
   "config.advise": "example: ",
+  "config.range": "range: ",
   "config.dataType": "type: ",
   "config.comment.data.datasource": "Data stored.",
   "config.comment.data.prefix": "Table prefix.",
