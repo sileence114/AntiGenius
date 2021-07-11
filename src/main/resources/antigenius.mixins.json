@@ -4,8 +4,6 @@
   "package": "pub.silence.antigenius.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinCommandManager",
-    "MixinServerPlayerEntity"
   ],
   "client": [
   ],

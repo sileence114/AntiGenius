@@ -15,11 +15,8 @@ public class ConfigItem<T> {
     // About Value
     private T value;
     private T defaultValue;
-    // Sort Id
-    private int id;
-    public ConfigItem(T defaultValue, int sort){
+    public ConfigItem(T defaultValue){
         this.value = this.defaultValue = defaultValue;
-        this.id = sort;
     }
     
     // About Suggest
@@ -101,10 +98,7 @@ public class ConfigItem<T> {
     public T get(){
         return this.value;
     }
-    public Class<?> type(){
-        return this.defaultValue.getClass();
-    }
-    public int getSortId(){
-        return this.id;
+    public Class<T> type(){
+        return (Class<T>)this.defaultValue.getClass();
     }
 }

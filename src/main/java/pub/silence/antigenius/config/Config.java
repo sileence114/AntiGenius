@@ -8,58 +8,96 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.lang3.ArrayUtils;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.scanner.ScannerException;
 import pub.silence.antigenius.AntiGenius;
 
 public class Config {
-    private static final HashMap<String, ConfigItem<?>> data = new HashMap<>();
+    private Config() {}
+    
+    private static final Map<String, ConfigItem<?>> DATA = Collections.synchronizedMap(new HashMap<>());
+    private static final String[] KEY_SORT = new String[]{
+        "data",
+            "data.prefix",
+            "data.datasource",
+            "data.mysql",
+                "data.mysql.hostname",
+                "data.mysql.port",
+                "data.mysql.database",
+                "data.mysql.username",
+                "data.mysql.password",
+            "data.advance",
+                "data.advance.max-failures-before-wait",
+                "data.advance.actions-per-insert-batch",
+                "data.advance.force-write-queue-on-shutdown",
+        "tracking",
+            "tracking.block-break",
+            "tracking.block-burn",
+            "tracking.block-dispense",
+            "tracking.block-fade",
+            "tracking.block-fall",
+            "tracking.block-form",
+            "tracking.block-place",
+            "tracking.block-shift",
+            "tracking.block-spread",
+            "tracking.block-use",
+    };
     static {
-        data.put("data.datasource", new ConfigItem<>("mysql", 1).setSuggest(new String[]{
-            "mysql"
-        }).forceSuggest());
-        data.put("data.prefix", new ConfigItem<>("ag_", 2).setSuggest(new String[]{
+        DATA.put("data.prefix", new ConfigItem<>("ag_").setSuggest(new String[]{
             "log_", "prism_"
         }));
-    
-        data.put("data.mysql.hostname", new ConfigItem<>("127.0.0.1", 3).setSuggest(new String[]{
+        DATA.put("data.datasource", new ConfigItem<>("mysql").setSuggest(new String[]{
+            "mysql"
+        }).forceSuggest());
+        DATA.put("data.mysql.hostname", new ConfigItem<>("127.0.0.1").setSuggest(new String[]{
             "127.0.0.1", "localhost"
         }));
-    
-        data.put("data.mysql.port", new ConfigItem<>(3306, 4).setRange(0,65535));
-        data.put("data.mysql.database", new ConfigItem<>("minecraft", 5));
-        data.put("data.mysql.username", new ConfigItem<>("root", 6));
-        data.put("data.mysql.password", new ConfigItem<>("", 7));
+        DATA.put("data.mysql.port", new ConfigItem<>(3306).setRange(0, 65535));
+        DATA.put("data.mysql.database", new ConfigItem<>("minecraft"));
+        DATA.put("data.mysql.username", new ConfigItem<>("root"));
+        DATA.put("data.mysql.password", new ConfigItem<>(""));
         
-        data.put("data.advance.max-failures-before-wait", new ConfigItem<>(5, 8));
-        data.put("data.advance.actions-per-insert-batch", new ConfigItem<>(300, 9));
-        data.put("data.advance.force-write-queue-on-shutdown", new ConfigItem<>(true, 10));
-        
-        data.put("language", new ConfigItem<>(Language.getSuggestLanguage(), 11).setSuggest(
+        DATA.put("data.advance.max-failures-before-wait", new ConfigItem<>(5));
+        DATA.put("data.advance.actions-per-insert-batch", new ConfigItem<>(300));
+        DATA.put("data.advance.force-write-queue-on-shutdown", new ConfigItem<>(true));
+        DATA.put("language", new ConfigItem<>(Language.getSuggestLanguage()).setSuggest(
             new ArrayList<>(Language.getAvailableLang())
         ).forceSuggest());
+        
+        DATA.put("tracking.block-break", new ConfigItem<>(true));
+        DATA.put("tracking.block-burn", new ConfigItem<>(true));
+        DATA.put("tracking.block-dispense", new ConfigItem<>(true));
+        DATA.put("tracking.block-fade", new ConfigItem<>(true));
+        DATA.put("tracking.block-fall", new ConfigItem<>(true));
+        DATA.put("tracking.block-form", new ConfigItem<>(true));
+        DATA.put("tracking.block-place", new ConfigItem<>(true));
+        DATA.put("tracking.block-shift", new ConfigItem<>(true));
+        DATA.put("tracking.block-spread", new ConfigItem<>(true));
+        DATA.put("tracking.block-use", new ConfigItem<>(true));
     }
     public static void initialize(){
-        // AntiGenius.logger().debug("\n" + toCommentString());
         if(!loadCostumeData()){
             saveConfigFile();
         }
+        AntiGenius.LOGGER.debug("\n" + toCommentString());
     }
     private static boolean loadCostumeData() {
         File configFile = AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile();
         if (!configFile.exists()) {
-            AntiGenius.logger().info(Language.get("console.log.config.loadFailed"));
+            AntiGenius.LOGGER.info(Language.get("console.log.config.loadFailed"));
             return false;
         }
         try {
             merge(new Yaml().load(new FileReader(configFile)), "");
-//            AntiGenius.debug("\n" + toCommentString());
             return true;
         }
-        catch (IOException | ScannerException e) {
-            AntiGenius.logger().error("Load config.yml failed. Backup it and create a new file.\n" + e.getMessage());
+        catch (IOException | ScannerException | NullPointerException e) {
+            AntiGenius.LOGGER.error("Load config.yml failed. Backup it and create a new file.\n" + e.getMessage());
             return false;
         }
     }
@@ -69,13 +107,7 @@ public class Config {
     private static String toCommentString(HashMap<String, Object> node, int tab, String parentNode) {
         StringBuilder result = new StringBuilder();
         ArrayList<String> keySet = new ArrayList<>(node.keySet());
-        keySet.sort((o1, o2) -> {
-            ConfigItem<?> ci1 = data.get(parentNode + (tab == 0 ? "" : ".") + o1);
-            ConfigItem<?> ci2 = data.get(parentNode + (tab == 0 ? "" : ".") + o2);
-            int i1 = ci1==null ? 0 : ci1.getSortId();
-            int i2 = ci2==null ? 0 : ci2.getSortId();
-            return i1 - i2;
-        });
+        keySet.sort(Comparator.comparingInt(o -> ArrayUtils.indexOf(KEY_SORT, o)));
         for (String nodeName : keySet) {
             String nodePath = parentNode + (tab == 0 ? "" : ".") + nodeName;
             String tabIndentation  = String.join("", Collections.nCopies(tab, "  "));
@@ -132,7 +164,7 @@ public class Config {
     }
     private static HashMap<String, Object> getMapWithNodeStruct(){
         HashMap<String, Object> result = new HashMap<>();
-        for (String nodePath: data.keySet()) { // aaa.bbb.ccc
+        for (String nodePath: DATA.keySet()) { // aaa.bbb.ccc
             String[] nodePathSplit = nodePath.split("(?<!\\\\)[.]"); // [aaa, bbb, ccc]
             HashMap<String, Object> nodeVal = result;
             for (int index = 0; index < nodePathSplit.length - 1; index++) { // aaa
@@ -141,7 +173,7 @@ public class Config {
                     nodeVal = (HashMap<String, Object>)nodeVal.get(nodePathSplit[index]);
                 }
             }
-            nodeVal.put(nodePathSplit[nodePathSplit.length - 1], data.get(nodePath));
+            nodeVal.put(nodePathSplit[nodePathSplit.length - 1], DATA.get(nodePath));
         }
         return result;
     }
@@ -153,7 +185,7 @@ public class Config {
                 merge((HashMap<String, Object>)nodeValue, childNodePath);
             }
             else {
-                ConfigItem<?> configItem = data.get(childNodePath);
+                ConfigItem<?> configItem = DATA.get(childNodePath);
                 if(configItem != null){
                     configItem.set(root.get(node));
                 }
@@ -171,7 +203,7 @@ public class Config {
                         new SimpleDateFormat("MMddHHmmss").format(new Date())
                     )).toAbsolutePath()
                 );
-                AntiGenius.logger().debug("Backup old config file.");
+                AntiGenius.LOGGER.debug("Backup old config file.");
             }
             PrintWriter out = new PrintWriter(configFile);
             String[] configLines = toCommentString().split("\n");
@@ -181,17 +213,17 @@ public class Config {
             out.close();
         }
         catch (IOException e) {
-            AntiGenius.logger().error("UnExpected IOException happened when writing config.yml.\n" + e.getMessage());
+            AntiGenius.LOGGER.error("UnExpected IOException happened when writing config.yml.\n" + e.getMessage());
             System.exit(0);
         }
     }
     public static void reset(){
-        for (String key: data.keySet()) {
-            data.get(key).reset();
+        for (String key: DATA.keySet()) {
+            DATA.get(key).reset();
         }
     }
     public static ConfigItem<?> configItem(String node){
-        return data.get(node);
+        return DATA.get(node);
     }
     public static int getInt(String node){
         return (int)configItem(node).get();
@@ -204,5 +236,8 @@ public class Config {
     }
     public static String getString(String node){
         return (String)configItem(node).get();
+    }
+    public static <T> T get(String node){
+        return ( (ConfigItem<T>)configItem(node) ).get();
     }
 }

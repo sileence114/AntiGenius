@@ -21,9 +21,9 @@ dependencies {
 //     You may need to force-disable transitiveness on them.
     modImplementation "com.google.code.gson:gson:2.8.6"
     modImplementation "org.yaml:snakeyaml:1.26"
-    // Needn't include gson to building.
-    // include "com.google.code.gson:gson:2.8.6"
     include "org.yaml:snakeyaml:1.26"
+    modImplementation "com.zaxxer:HikariCP:4.0.3"
+    include "com.zaxxer:HikariCP:4.0.3"
 }
 
 processResources {

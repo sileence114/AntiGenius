@@ -11,9 +11,7 @@ public abstract class SubCommand {
     // Override it if necessary.
     // Resign this subcommand by default.
     public LiteralArgumentBuilder<ServerCommandSource> build(String alias){
-        return CommandManager.literal(alias)
-                             .requires(this::hasPermission)
-                             .executes(this::executeCommand);
+        return CommandManager.literal(alias).requires(this::hasPermission).executes(this::executeCommand);
     }
     // Must Override.
     // Default executed handler.

@@ -15,7 +15,7 @@ public class InspectCommand extends SubCommand {
     }
     @Override
     public int executeCommand(CommandContext<ServerCommandSource> commandContext) {
-        AntiGenius.logger().info("InspectCommand Executes");
+        AntiGenius.LOGGER.info("InspectCommand Executes");
         return 0;
     }
     

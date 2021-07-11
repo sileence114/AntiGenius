@@ -10,17 +10,20 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import pub.silence.antigenius.AntiGenius;
 
 public class Language {
+    private Language() {}
     
-    private static final HashMap<String, JsonObject> LANG_MAP = new HashMap<>();
+    private static final Map<String, JsonObject> LANG_MAP = Collections.synchronizedMap(new HashMap<>());
     
     private static final String SYSTEM_LANG = Locale.getDefault().getLanguage();
     private static final String SYSTEM_AREA = Locale.getDefault().getCountry().toLowerCase();
@@ -33,11 +36,11 @@ public class Language {
     public static void initialize(String langCode) {
         loadAllLang();
         setLanguage(langCode);
-        AntiGenius.logger().info(SYSTEM_LANG_CODE.equals(langCode) ? getWithCallback(
+        AntiGenius.LOGGER.info(SYSTEM_LANG_CODE.equals(langCode) ? getWithCallback(
             "console.log.language.setLanguageToYourSystem",
             "Try to set the language to the system language: %s.",
             langCode
-        ): getWithCallback(
+        ) : getWithCallback(
             "console.log.language.setLanguage",
             "Try to set language: %s.",
             langCode
@@ -56,13 +59,13 @@ public class Language {
         configLangCode = specifyLangCode;
         if (!LANG_MAP.containsKey(specifyLangCode)) {
             configLangCode = getSuggestLanguage();
-            AntiGenius.logger().info(getWithCallback(
+            AntiGenius.LOGGER.info(getWithCallback(
                 "console.log.language.suggestALanguageForSpecifyLangCodeNotFound",
                 "The '%s' language you configured didn't found! With reference to your settings and operating system " +
                 "information, switch to %s.",
                 specifyLangCode,
                 configLangCode));
-            AntiGenius.logger().info(getWithCallback(
+            AntiGenius.LOGGER.info(getWithCallback(
                 "console.log.language.askForTranslate",
                 "If you understand the current language, please come to Github to help translate language files!"
             ));
@@ -80,7 +83,7 @@ public class Language {
     public static String getWithCallback(String key, String callback, Object... args) {
         String message = get(key, args);
         if (key.equals(message)) {
-            AntiGenius.logger().debug(String.format(
+            AntiGenius.LOGGER.debug(String.format(
                 "Getting message failed from <%s>, using callback value <%s>.",
                 key, callback
             ));
@@ -231,21 +234,21 @@ public class Language {
                 }
             }
             catch (IOException e) {
-                AntiGenius.logger().warn(getWithCallback(
+                AntiGenius.LOGGER.warn(getWithCallback(
                     "console.log.language.exceptionHappenWhenLoadLangFile",
                     "Error happened when loading lang files."
                 ), e);
             }
         }
         else {
-            AntiGenius.logger().info(getWithCallback(
+            AntiGenius.LOGGER.info(getWithCallback(
                 "console.log.language.noCostumeLangDirectory",
                 "Costume lang directory not found. You can put customized .json language file in the " +
                 "\"config\\antigenius\\lang\" folder."
             ));
         }
     
-        AntiGenius.logger().info(getWithCallback(
+        AntiGenius.LOGGER.info(getWithCallback(
             "console.log.language.langFileLoadComplete",
             "%d lang file load complete: %s.",
             LANG_MAP.size(),
