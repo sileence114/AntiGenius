@@ -60,7 +60,7 @@ public class AntiGenius implements ModInitializer, DedicatedServerModInitializer
         Language.initialize();
         Config.initialize();
         Language.setLanguage(Config.getString("language"));
-        
+        LOGGER.info(Config.getInt("data.mysql.port"));
         // Register Command -> Fabric-Command-API
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
             if(dedicated) {

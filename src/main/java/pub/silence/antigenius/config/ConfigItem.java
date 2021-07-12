@@ -98,7 +98,7 @@ public class ConfigItem<T> {
     public T get(){
         return this.value;
     }
-    public Class<T> type(){
+    public Class<T> getOptionTypeClass(){
         return (Class<T>)this.defaultValue.getClass();
     }
 }

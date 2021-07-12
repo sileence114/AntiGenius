@@ -7,6 +7,12 @@
   "console.log.language.setLanguageToYourSystem": "Try to set the language to the system language: %s.",
   "console.log.language.setLanguage": "Try to set language: %s.",
   "console.log.config.loadFailed": "Load config failed, creating a default.",
+  "console.warn.config.getIntFromUnexpectedType": "Get int from unexpected config type.",
+  "console.warn.config.getDoubleFromUnexpectedType": "Get double from unexpected config type.",
+  "console.warn.config.getBooleanFromUnexpectedType": "Get boolean from unexpected config type.",
+  "console.error.config.typeErrorWhenSetNodeValue": "Type error at {%s: %s} should be <%s>, but <%s> instead.",
+  "console.warn.config.getFromUnexpectedType": "Something goes wrong in your config.yml. They have been pointed out above and reset to default values, the correct configuration will be retained.",
+  "console.warn.config.backupErrorConfig": "The configuration file with the error has been backed up and the configuration in the memory has been exported again.",
 
   "config.default": "default: ",
   "config.available": "options: ",

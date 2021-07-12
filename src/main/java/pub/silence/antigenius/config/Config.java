@@ -86,6 +86,11 @@ public class Config {
         }
         AntiGenius.LOGGER.debug("\n" + toCommentString());
     }
+    
+    /**
+     * Load config.yml
+     * @return If there are some IO problems cause failure, return false.
+     */
     private static boolean loadCostumeData() {
         File configFile = AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile();
         if (!configFile.exists()) {
@@ -93,7 +98,11 @@ public class Config {
             return false;
         }
         try {
-            merge(new Yaml().load(new FileReader(configFile)), "");
+            if(!merge(new Yaml().load(new FileReader(configFile)), "")) { // -> NOT an IO Problem.
+                AntiGenius.LOGGER.warn(Language.get("console.warn.config.getFromUnexpectedType"));
+                saveConfigFile();
+                AntiGenius.LOGGER.warn(Language.get("console.warn.config.backupErrorConfig"));
+            }
             return true;
         }
         catch (IOException | ScannerException | NullPointerException e) {
@@ -129,7 +138,7 @@ public class Config {
                 ConfigItem<?> configItem = (ConfigItem<?>) nodeValue;
                 // Config item data type
                 result.append(tabIndentation).append("# ").append(Language.get("config.dataType"))
-                      .append(configItem.type().getSimpleName().toLowerCase()).append('\n');
+                      .append(configItem.getOptionTypeClass().getSimpleName().toLowerCase()).append('\n');
                 // Suggest
                 if(!configItem.getSuggest().isEmpty()){
                     result.append(tabIndentation).append("# ").append(Language.get(
@@ -139,11 +148,11 @@ public class Config {
                 if(configItem.isForceRange()){
                     double[] range = configItem.getRange();
                     result.append(tabIndentation).append("# ").append(Language.get("config.range")).append(
-                        configItem.type().equals(Integer.class) ?
+                        configItem.getOptionTypeClass().equals(Integer.class) ?
                         String.format(
                             "[%d, %d)"
                             , (int)range[0], (int)range[1]
-                        ):String.format(
+                        ) :String.format(
                             "[%f, %f)"
                             , range[0], range[1]
                         )
@@ -177,20 +186,34 @@ public class Config {
         }
         return result;
     }
-    private static void merge(HashMap<String, Object> root, String nodePath){
+    /**
+     * Merge nodes from config.yml to DATA map.
+     * @param root The node of config map.
+     * @param nodePath The path of config map.
+     * @return If some nodes went wrong, return false.
+     */
+    private static boolean merge(HashMap<String, Object> root, String nodePath){
+        boolean everyThingOK = true;
         for (String node : root.keySet()) {
             Object nodeValue = root.get(node);
             String childNodePath = (nodePath.isEmpty() ? "" : (nodePath + ".")) + node;
             if (nodeValue instanceof HashMap) {
-                merge((HashMap<String, Object>)nodeValue, childNodePath);
+                everyThingOK = everyThingOK && merge((HashMap<String, Object>)nodeValue, childNodePath);
             }
             else {
                 ConfigItem<?> configItem = DATA.get(childNodePath);
                 if(configItem != null){
-                    configItem.set(root.get(node));
+                    try{
+                        configItem.set(root.get(node));
+                    }
+                    catch (ClassCastException e){
+                        everyThingOK = false;
+                        configItemTypeError(childNodePath, root.get(node), configItem.getOptionTypeClass(), root.get(node).getClass());
+                    }
                 }
             }
         }
+        return everyThingOK;
     }
     private static void saveConfigFile() {
         File configFile = AntiGenius.getInstance().getWorkingDir().resolve("config.yml").toFile();
@@ -199,16 +222,15 @@ public class Config {
                 Files.copy(
                     configFile.toPath(),
                     AntiGenius.getInstance().getWorkingDir().resolve(String.format(
-                        "config.%s.yml",
-                        new SimpleDateFormat("MMddHHmmss").format(new Date())
+                        "config.%s.backup.yml",
+                        new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
                     )).toAbsolutePath()
                 );
                 AntiGenius.LOGGER.debug("Backup old config file.");
             }
             PrintWriter out = new PrintWriter(configFile);
-            String[] configLines = toCommentString().split("\n");
-            for (String line : configLines) {
-                out.println(line);
+            for (String line : toCommentString().split("\n")) {
+                out.println(line); // Different OS has different line separator, so split and use build-in operation.
             }
             out.close();
         }
@@ -217,6 +239,16 @@ public class Config {
             System.exit(0);
         }
     }
+    private static void configItemTypeError(String node, Object value, Class<?> shouldBe, Class<?> butGet){
+        AntiGenius.LOGGER.error(Language.get(
+            "console.error.config.typeErrorWhenSetNodeValue",
+            node,
+            value.toString(),
+            shouldBe.getSimpleName(),
+            butGet.getSimpleName()
+        ));
+    }
+    
     public static void reset(){
         for (String key: DATA.keySet()) {
             DATA.get(key).reset();
@@ -226,16 +258,48 @@ public class Config {
         return DATA.get(node);
     }
     public static int getInt(String node){
-        return (int)configItem(node).get();
+        Object val = configItem(node).get();
+        if(val instanceof Number){
+            return ( (Number)val ).intValue();
+        }
+        else{
+            AntiGenius.LOGGER.warn(Language.get("console.warn.config.getIntFromUnexpectedType"));
+            configItemTypeError(node, val, Integer.class, configItem(node).getOptionTypeClass());
+            return 0;
+        }
     }
     public static double getDouble(String node){
-        return (double)configItem(node).get();
+        Object val = configItem(node).get();
+        if(val instanceof Number){
+            return ( (Number)val ).doubleValue();
+        }
+        else{
+            AntiGenius.LOGGER.warn(Language.get("console.warn.config.getDoubleFromUnexpectedType"));
+            configItemTypeError(node, val, Double.class, configItem(node).getOptionTypeClass());
+            return 0d;
+        }
     }
     public static boolean getBoolean(String node){
-        return (boolean)configItem(node).get();
+        Object val = configItem(node).get();
+        if(val instanceof Boolean){
+            return (Boolean)val;
+        }
+        else if(val instanceof Number){
+            return !val.equals(0);
+        }
+        else if(val instanceof String){
+            return !( (String)val ).isEmpty();
+        }
+        else{
+            AntiGenius.LOGGER.warn(Language.get("console.warn.config.getBooleanFromUnexpectedType"));
+            configItemTypeError(node, val, Boolean.class, configItem(node).getOptionTypeClass());
+            return false;
+        }
     }
     public static String getString(String node){
-        return (String)configItem(node).get();
+        Object val = configItem(node).get();
+        assert val != null;
+        return val.toString();
     }
     public static <T> T get(String node){
         return ( (ConfigItem<T>)configItem(node) ).get();
