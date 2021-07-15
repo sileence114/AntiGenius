@@ -1,80 +1,56 @@
 package pub.silence.antigenius;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pub.silence.antigenius.command.AntigeniusCommand;
 import pub.silence.antigenius.config.Config;
 import pub.silence.antigenius.config.Language;
+import pub.silence.antigenius.platform.AntiGeniusInstanceManger;
+import pub.silence.antigenius.utils.CollectionUtils;
+import pub.silence.antigenius.utils.RegistryGetter;
 
 
-public class AntiGenius implements ModInitializer, DedicatedServerModInitializer{
+public interface AntiGenius{
     
-    public static final Logger LOGGER = LogManager.getLogger(AntiGenius.class);
-    private static AntiGenius instance;
+    // Remember: Use [-Dfabric.log.level=debug] to show debug level on console.
+    Logger LOGGER = LogManager.getLogger(AntiGenius.class);
     
-    private ModContainer container;
-    private Path workingDir;
-    
-    public AntiGenius() {
-        if (instance == null) {
-            instance = this;
-        }
-    }
-    public static AntiGenius getInstance() {
-        if(instance == null){
-            new AntiGenius();
-        }
-        return instance;
+    static AntiGenius getInstance() {
+        return AntiGeniusInstanceManger.getInstance();
     }
     
-    
-    @Override
-    public void onInitialize() {
-        this.container = FabricLoader.getInstance().getModContainer("antigenius").orElseThrow(
-            () -> new IllegalStateException("AntiGenius Mod Missing.")
-        );
-        this.workingDir = FabricLoader.getInstance().getConfigDir().resolve("antigenius");
-        if (!Files.exists(this.workingDir)) {
-            try {
-                Files.createDirectory(this.workingDir);
-            }
-            catch (IOException e) {
-                throw new UncheckedIOException(e);
-            }
-        }
-        LOGGER.info("AntiGenius v" + this.getInternalVersion() + " is loading.");
-    }
-    
-    @Override
-    public void onInitializeServer() {
-        // Initialize config and language
+    default void onLoad(){
+        StringBuilder msg = new StringBuilder(":>\n\n");
+        msg.append("     █████╗   ██████╗    ").append('\n');
+        msg.append("    ██╔══██╗ ██╔════╝    ").append('\n');
+        msg.append("    ███████║ ██║  ███╗   ").append("AntiGenius v").append(getInstance().getAntiGeniusVersion()).append('\n');
+        msg.append("    ██╔══██║ ██║   ██║   ").append("Running on ").append(getInstance().getPlatFormName()).append(" v").append(getInstance().getPlatFormVersion()).append('\n');
+        msg.append("    ██║  ██║ ╚██████╔╝   ").append("MineCraft v").append(getInstance().gatGameVersion()).append('\n');
+        AntiGenius.LOGGER.info(msg);
         Language.initialize();
         Config.initialize();
         Language.setLanguage(Config.getString("language"));
-        LOGGER.info(Config.getInt("data.mysql.port"));
-        // Register Command -> Fabric-Command-API
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            if(dedicated) {
-                AntigeniusCommand.register(dispatcher);
-                LOGGER.debug("Command registration Completed.");
-            }
-        });
     }
     
-    public String getInternalVersion() {
-        return this.container.getMetadata().getVersion().toString();
+    default void onInitializeWorld() {
+        CollectionUtils.printSet(
+            RegistryGetter.dimensions(),
+            "========== dimensions =========="
+        );
+        CollectionUtils.printSet(
+            RegistryGetter.blocks(),
+            "========== blocks =========="
+        );
+        CollectionUtils.printSet(
+            RegistryGetter.items(),
+            "========== items =========="
+        );
+        AntiGenius.LOGGER.info("");
     }
     
-    public Path getWorkingDir() {
-        return this.workingDir;
-    }
+    String getAntiGeniusVersion();
+    String getPlatFormName();
+    String getPlatFormVersion();
+    String gatGameVersion();
+    Path getWorkingDir();
 }

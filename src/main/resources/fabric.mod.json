@@ -20,10 +20,9 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "pub.silence.antigenius.AntiGenius"
     ],
     "server": [
-      "pub.silence.antigenius.AntiGenius"
+      "pub.silence.antigenius.platform.AntiGeniusFabric"
     ]
   },
   "mixins": [
@@ -31,7 +30,6 @@
   ],
   "depends": {
     "fabricloader": ">=0.7.4",
-    "fabric": "*",
     "minecraft": "1.15.x"
   },
   "suggests": {
