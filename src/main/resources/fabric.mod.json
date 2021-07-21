@@ -5,10 +5,7 @@
   "name": "AntiGenius",
   "description": "A fabric version of Prism named AntiGenius. Prevent grief from genius by logging and rollback.NOTE: This is a server-side mod. Doesn't work if you installed on a client.   Fabric \u7248\u7684 Prism, \u540d\u66f0 \"AntiGenius\". \u901a\u8fc7\u8bb0\u5f55\u548c\u56de\u6eda\u6765\u9632\u6b62\u5c0f\u5929\u624d\u5f15\u53d1\u676f\u5177. \u6ce8\u610f: \u8fd9\u662f\u4e00\u4e2a\u670d\u52a1\u5668\u7aef MOD. \u5982\u8fc7\u4f60\u88c5\u5728\u4e86\u5ba2\u6237\u7aef\u4e0a\u7684\u8bdd, \u90a3\u88c5\u4e86\u7b49\u4e8e\u6ca1\u88c5.",
   "authors": [
-    "Silence",
-    "add5tar",
-    "Narimm",
-    "viveleroi"
+    "Silence"
   ],
   "contact": {
     "homepage": "https://github.com/sileence114/AntiGenius/wiki",

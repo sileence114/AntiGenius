@@ -6,7 +6,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Formatting;
 import pub.silence.antigenius.command.AntigeniusCommand;
-import pub.silence.antigenius.config.Language;
+import pub.silence.antigenius.utils.config.Language;
 
 public class HelpCommand extends SubCommand {
     

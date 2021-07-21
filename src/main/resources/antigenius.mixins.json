@@ -4,8 +4,9 @@
   "package": "pub.silence.antigenius.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "base.CommandManager_RegisterCommand",
-    "base.MinecraftServer_onInitializeWorld"
+    "base.CommandManager_onRegister",
+    "base.MinecraftServer_onInitializeWorld",
+    "event.Block_onBreak"
   ],
   "client": [
   ],

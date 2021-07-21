@@ -13,7 +13,7 @@ import pub.silence.antigenius.AntiGenius;
 import pub.silence.antigenius.command.AntigeniusCommand;
 
 @Mixin(CommandManager.class)
-public abstract class CommandManager_RegisterCommand {
+public abstract class CommandManager_onRegister {
     @Shadow @Final
     private CommandDispatcher<ServerCommandSource> dispatcher;
     

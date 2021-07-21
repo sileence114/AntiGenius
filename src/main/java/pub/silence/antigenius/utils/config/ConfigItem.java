@@ -1,4 +1,4 @@
-package pub.silence.antigenius.config;
+package pub.silence.antigenius.utils.config;
 
 import java.util.ArrayList;
 import java.util.Arrays;

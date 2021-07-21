@@ -16,8 +16,8 @@ public class AntiGeniusFabric implements AntiGenius, DedicatedServerModInitializ
     private Path workingDir;
     
     public AntiGeniusFabric() {
-        if (AntiGeniusInstanceManger.getInstance() == null) {
-            AntiGeniusInstanceManger.setInstance(this);
+        if (InstanceManger.instance == null) {
+            InstanceManger.instance = this;
         }
     }
     

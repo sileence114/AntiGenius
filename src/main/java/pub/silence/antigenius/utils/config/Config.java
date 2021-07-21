@@ -1,4 +1,4 @@
-package pub.silence.antigenius.config;
+package pub.silence.antigenius.utils.config;
 
 import java.io.File;
 import java.io.FileReader;
